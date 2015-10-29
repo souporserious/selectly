@@ -1,0 +1,24 @@
+{
+  "name": "selectly",
+  "version": "0.0.1",
+  "homepage": "https://github.com/souporserious/selectly",
+  "authors": [
+    "Travis Arnold <ftntravis@gmail.com>"
+  ],
+  "description": "Build custom, accessible, select menus for React.",
+  "main": ["./dist/selectly.js"],
+  "keywords": [
+    "react",
+    "component",
+    "select",
+    "combobox"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
