@@ -2,12 +2,13 @@ import React, { Component, Children, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import Selectly from '../src/selectly'
 
+import '../src/selectly.scss'
 import './main.scss'
 
 class App extends Component {
   state = {
     currentValue: null,
-    options: {[
+    options: [
       { label: 'Dogs', optgroup: [
         { value: 'beagle', label: 'Beagle' },
         { value: 'boxer', label: 'Boxer' },
@@ -20,11 +21,11 @@ class App extends Component {
         { value: 'munchkin', label: 'Munchkin' },
         { value: 'persian', label: 'Persian' }
       ]}
-    ]}
+    ]
   }
 
-  _handleChange = (currentValue) => {
-    this.setState({currentValue})
+  _handleChange = (option) => {
+    this.setState({currentValue: option.value})
   }
 
   render() {
@@ -35,12 +36,9 @@ class App extends Component {
         name="selectly"
         value={currentValue}
         options={options}
+        //multiple={true}
+        offset="1px 0px"
         onChange={this._handleChange}
-        renderTrigger={null}
-        renderHeader={null}
-        renderOptions={null}
-        renderOption={null}
-        renderFooter={null}
       />
     )
   }

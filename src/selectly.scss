@@ -1,0 +1,91 @@
+.react-select {
+  display: inline-block;
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+
+.react-select__trigger {
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  height: auto;
+  padding: 6px 27px 6px 6px;
+  font-size: 14px;
+  text-align: left;
+  border: 1px solid #d3d4d4;
+  background: white;
+  outline: 0;
+  cursor: pointer;
+  &, &:active {
+    color: black;
+  }
+  * { // truncate children with ellipsis
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.react-select__trigger__arrow {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.react-select-drop {
+  width: 100%;
+  max-height: 180px;
+  padding: 3px 0;
+  border: 1px solid #e1e1e1;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px 0 rgba(218, 221, 222, 0.35);
+  background-color: white;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.react-select__options {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.react-select__option {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 8px;
+  font-size: 14px;
+  text-indent: 4px;
+  border-radius: 2px;
+  cursor: pointer;
+  &:hover {
+    background: #DFF5FF;
+  }
+}
+
+.react-select__option__label {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.react-select__optgroup {
+  display: block;
+  padding: 3px 0;
+  cursor: default;
+  &:hover {
+    background: transparent;
+  }
+}
+
+.react-select__optgroup__title {
+  display: block;
+  padding: 0 12px 4px;
+  font-weight: 700;
+  color: #353638;
+  user-select: none;
+}
