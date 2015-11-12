@@ -1,6 +1,6 @@
-## Selectly 0.0.1
+## Selectly 0.1.0
 
-Build custom, accessible, select menus for React.
+Build custom, accessible, select menus in React.
 
 ## Install
 
