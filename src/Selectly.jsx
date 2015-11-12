@@ -69,8 +69,9 @@ class Selectly extends Component {
     disabled: PropTypes.bool,
     offset: PropTypes.string,
     autoWidth: PropTypes.bool,
-    renderTrigger: PropTypes.func,
-    renderOption: PropTypes.func,
+    renderTrigger: PropTypes.func.isRequired,
+    renderContent: PropTypes.func.isRequired,
+    renderOption: PropTypes.func.isRequired,
     renderHeader: PropTypes.func,
     renderFooter: PropTypes.func,
     onChange: PropTypes.func
@@ -85,6 +86,7 @@ class Selectly extends Component {
     offset: '0px 0px',
     autoWidth: true,
     renderTrigger: defaultTrigger,
+    renderContent: content => content,
     renderOption: defaultOption,
     renderHeader: noopFunc,
     renderFooter: noopFunc,
@@ -232,21 +234,21 @@ class Selectly extends Component {
     return (
       <div ref="trigger" className={triggerClassName}>
         {this._renderTrigger(currentOption, isOpen, disabled)}
-        {
-          isOpen &&
-          <TetherElement
-            target={this.refs.trigger}
-            options={{
-              attachment: 'top left',
-              targetAttachment: 'bottom left',
-              offset,
-              classPrefix: 'react-select',
-              constraints: [{
-                to: 'window',
-                attachment: 'together'
-              }]
-            }}
-          >
+        <TetherElement
+          target={this.refs.trigger}
+          options={{
+            attachment: 'top left',
+            targetAttachment: 'bottom left',
+            offset,
+            classPrefix: 'react-select',
+            constraints: [{
+              to: 'window',
+              attachment: 'together'
+            }]
+          }}
+        >
+          {this.props.renderContent(
+            isOpen &&
             <div
               ref="drop"
               className={dropClassName}
@@ -260,8 +262,8 @@ class Selectly extends Component {
               </ul>
               {this._renderFooter()}
             </div>
-          </TetherElement>
-        }
+          )}
+        </TetherElement>
       </div>
     )
   }
