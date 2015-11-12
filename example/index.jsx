@@ -46,12 +46,12 @@ class App extends Component {
         options={options}
         //multiple={true}
         offset="1px 0px"
-        renderContent={content =>
+        renderContent={(content, isOpen) =>
           <Transition
             enter={{opacity: spring(1, [300, 30]), scale: 1}}
             leave={{opacity: spring(0, [300, 30]), scale: 1.02}}
           >
-            {content}
+            {isOpen && content}
           </Transition>
         }
         onChange={this._handleChange}

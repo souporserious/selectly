@@ -5,6 +5,14 @@
   position: relative;
 }
 
+.react-select-element {
+  pointer-events: none;
+}
+
+.react-select-enabled {
+  pointer-events: auto;
+}
+
 .react-select__trigger {
   box-sizing: border-box;
   display: flex;

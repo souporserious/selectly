@@ -26,6 +26,11 @@ const defaultTrigger = (currentOption, isActive, isDisabled) => {
     </button>
   )
 }
+const defaultContent = (content, isOpen) => {
+  return (
+    isOpen ? content : <span/>
+  )
+}
 const defaultOption = ({value, label, onSelect}, nestedOptions, level) => {
   return (
     <li
@@ -86,7 +91,7 @@ class Selectly extends Component {
     offset: '0px 0px',
     autoWidth: true,
     renderTrigger: defaultTrigger,
-    renderContent: content => content,
+    renderContent: defaultContent,
     renderOption: defaultOption,
     renderHeader: noopFunc,
     renderFooter: noopFunc,
@@ -120,12 +125,23 @@ class Selectly extends Component {
 
     if (this.props.disabled !== nextProps.disabled &&
         nextProps.disabled === true) {
-      this.setState({isOpen: false})
+      this._setOpen(false)
     }
   }
 
   componentWillUnmount() {
     eventsHandler.remove(this)
+  }
+
+  _setOpen(isOpen) {
+    this.setState({isOpen})
+
+    // enable / disable tethered content
+    if (isOpen) {
+      this.refs.tether.enable()
+    } else {
+      this.refs.tether.disable()
+    }
   }
 
   _setWidth() {
@@ -138,9 +154,9 @@ class Selectly extends Component {
     if (this.props.disabled) return
 
     if (this.refs.trigger.contains(e.target)) {
-      this.setState({isOpen: !this.state.isOpen})
+      this._setOpen(!this.state.isOpen)
     } else if (this.refs.drop && !this.refs.drop.contains(e.target)) {
-      this.setState({isOpen: false})
+      this._setOpen(false)
     }
   }
 
@@ -175,9 +191,18 @@ class Selectly extends Component {
     return value ? this._lookup[value] : this._firstOption
   }
 
-  _handleOptionClick(option) {
+  _handleOptionClick = (option) => {
     this.props.onChange(option)
-    this.setState({isOpen: false})
+
+    if (!this.props.multiple) {
+      this._setOpen(false)
+
+      // for some reason tether won't get disabled on an option click,
+      // this works for now, but need to look into fixing it
+      setTimeout(() => {
+        this.refs.tether.disable()
+      }, 0)
+    }
   }
 
   _renderTrigger(currentOption, isActive, isDisabled) {
@@ -185,7 +210,7 @@ class Selectly extends Component {
   }
 
   _renderHeader() {
-    const closeMenu = () => this.setState({isOpen: false})
+    const closeMenu = () => this._setOpen(false)
     return this.props.renderHeader(closeMenu)
   }
 
@@ -202,14 +227,14 @@ class Selectly extends Component {
     }
 
     return this.props.renderOption(
-      { ...option, onSelect: this._handleOptionClick.bind(this, option) },
+      { ...option, onSelect: this._handleOptionClick.bind(null, option) },
       nestedOptions,
       level
     )
   }
 
   _renderFooter() {
-    const closeMenu = () => this.setState({isOpen: false})
+    const closeMenu = () => this._setOpen(false)
     return this.props.renderFooter(closeMenu)
   }
 
@@ -235,6 +260,7 @@ class Selectly extends Component {
       <div ref="trigger" className={triggerClassName}>
         {this._renderTrigger(currentOption, isOpen, disabled)}
         <TetherElement
+          ref="tether"
           target={this.refs.trigger}
           options={{
             attachment: 'top left',
@@ -248,7 +274,6 @@ class Selectly extends Component {
           }}
         >
           {this.props.renderContent(
-            isOpen &&
             <div
               ref="drop"
               className={dropClassName}
@@ -261,7 +286,8 @@ class Selectly extends Component {
                 )}
               </ul>
               {this._renderFooter()}
-            </div>
+            </div>,
+            isOpen
           )}
         </TetherElement>
       </div>
