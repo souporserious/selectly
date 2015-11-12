@@ -30,9 +30,9 @@
   "homepage": "https://github.com/souporserious/selectly",
   "dependencies": {
     "react": "^0.14.0",
-    "react-addons-shallow-compare": "^0.14.1",
+    "react-addons-shallow-compare": "^0.14.0",
     "react-dom": "^0.14.0",
-    "react-tether": "^0.1.1"
+    "react-tether": "^0.1.2"
   },
   "devDependencies": {
     "autoprefixer-loader": "^2.0.0",
