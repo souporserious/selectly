@@ -37,7 +37,7 @@
 
 .react-select__trigger__option {
   user-select: none;
-  
+
   & + & {
     margin-left: 6px;
   }
@@ -83,6 +83,7 @@
   text-indent: 4px;
   border-radius: 2px;
   cursor: pointer;
+  user-select: none;
   &:hover {
     background: #DFF5FF;
   }

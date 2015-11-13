@@ -83,24 +83,24 @@ class Selectly extends Component {
   static propTypes = {
     name: PropTypes.string,
     value: PropTypes.any,
-    options: PropTypes.array.isRequired,
+    options: PropTypes.array,
     multiple: PropTypes.bool,
     disabled: PropTypes.bool,
     offset: PropTypes.string,
     autoWidth: PropTypes.bool,
-    renderTrigger: PropTypes.func.isRequired,
-    renderContent: PropTypes.func.isRequired,
-    renderOption: PropTypes.func.isRequired,
+    renderTrigger: PropTypes.func,
+    renderContent: PropTypes.func,
+    renderOption: PropTypes.func,
     renderHeader: PropTypes.func,
     renderFooter: PropTypes.func,
     onChange: PropTypes.func
   }
 
   static defaultProps = {
-    //name: null, // generate uuid for aria labels
+    //name: this._id, // use uuid if no name for aria labels
     value: null,
     options: [],
-    //multiple: false, // whether or not the click passed will close the menu, allows mutliple options to be selected
+    multiple: false,
     disabled: false,
     offset: '0px 0px',
     autoWidth: true,

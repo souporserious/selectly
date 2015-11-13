@@ -44,12 +44,11 @@ class Demo1 extends Component {
         name="selectly"
         value={currentValue}
         options={options}
-        //multiple={true}
         offset="1px 0px"
         renderContent={(content, isOpen) =>
           <Transition
-            enter={{opacity: spring(1, [300, 30]), scale: 1}}
-            leave={{opacity: spring(0, [300, 30]), scale: 1.02}}
+            enter={{opacity: spring(1, [300, 30]), scale: 1.00}}
+            leave={{opacity: spring(0, [300, 30]), scale: 0.98}}
           >
             {isOpen && content}
           </Transition>
