@@ -28,7 +28,6 @@ var config = {
   externals: {
     'react': 'React',
     'react-dom': 'ReactDOM',
-    'react-addons-shallow-compare': 'shallowCompare',
     'react-tether': 'TetherElement'
   },
 };

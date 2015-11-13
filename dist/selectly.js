@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("React"), require("shallowCompare"), require("TetherElement"));
+		module.exports = factory(require("React"), require("TetherElement"));
 	else if(typeof define === 'function' && define.amd)
-		define(["React", "shallowCompare", "TetherElement"], factory);
+		define(["React", "TetherElement"], factory);
 	else if(typeof exports === 'object')
-		exports["Selectly"] = factory(require("React"), require("shallowCompare"), require("TetherElement"));
+		exports["Selectly"] = factory(require("React"), require("TetherElement"));
 	else
-		root["Selectly"] = factory(root["React"], root["shallowCompare"], root["TetherElement"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__) {
+		root["Selectly"] = factory(root["React"], root["TetherElement"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_6__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -99,23 +99,38 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
 
-	var _reactTether = __webpack_require__(4);
+	var _reactTether = __webpack_require__(6);
 
 	var _reactTether2 = _interopRequireDefault(_reactTether);
 
-	var _EventsHandler = __webpack_require__(5);
+	var _EventsHandler = __webpack_require__(7);
 
 	var _EventsHandler2 = _interopRequireDefault(_EventsHandler);
 
 	var eventsHandler = new _EventsHandler2['default']();
-	var defaultTrigger = function defaultTrigger(currentOption, isActive, isDisabled) {
+	var defaultTrigger = function defaultTrigger(currentOptions, isActive, isDisabled) {
+	  var isMultiple = currentOptions.constructor === Array;
+
+	  if (!isMultiple) {
+	    currentOptions = [currentOptions];
+	  }
+
 	  return _react2['default'].createElement(
 	    'button',
 	    {
 	      type: 'button',
-	      className: 'react-select__trigger' + (isActive ? ' react-select__trigger--active' : '') + (isDisabled ? ' react-select__trigger--disabled' : '')
+	      className: 'react-select__trigger' + (isMultiple ? ' react-select__trigger--multiple' : '') + (isActive ? ' react-select__trigger--active' : '') + (isDisabled ? ' react-select__trigger--disabled' : '')
 	    },
-	    currentOption.label,
+	    currentOptions.map(function (currentOption) {
+	      return _react2['default'].createElement(
+	        'span',
+	        {
+	          key: currentOption.label,
+	          className: 'react-select__trigger__option'
+	        },
+	        currentOption.label
+	      );
+	    }),
 	    _react2['default'].createElement(
 	      'svg',
 	      {
@@ -199,7 +214,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        setTimeout(function () {
 	          _this.refs.tether.disable();
 	        }, 0);
-	      }
+	      } else {}
 	    };
 	  }
 
@@ -296,9 +311,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_getCurrentOption',
 	    value: function _getCurrentOption() {
+	      var _this2 = this;
+
 	      var value = this.props.value;
 
-	      return value ? this._lookup[value] : this._firstOption;
+	      var option = null;
+
+	      // if no value provided return the first option
+	      if (!value) {
+	        option = this._firstOption;
+	        // if an array we return an array of the selected options back
+	      } else if (value.constructor === Array) {
+	          option = value.map(function (currValue) {
+	            return _this2._lookup[currValue];
+	          });
+	          // otherwise just return the single selected option
+	        } else {
+	            option = this._lookup[value];
+	          }
+
+	      return option;
 	    }
 	  }, {
 	    key: '_renderTrigger',
@@ -308,17 +340,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_renderHeader',
 	    value: function _renderHeader() {
-	      var _this2 = this;
+	      var _this3 = this;
 
 	      var closeMenu = function closeMenu() {
-	        return _this2._setOpen(false);
+	        return _this3._setOpen(false);
 	      };
 	      return this.props.renderHeader(closeMenu);
 	    }
 	  }, {
 	    key: '_renderOption',
 	    value: function _renderOption(option) {
-	      var _this3 = this;
+	      var _this4 = this;
 
 	      var level = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 	      var value = option.value;
@@ -331,7 +363,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (optgroup) {
 	        level++;
 	        nestedOptions = optgroup.map(function (nestedOption) {
-	          return _this3._renderOption(nestedOption, level);
+	          return _this4._renderOption(nestedOption, level);
 	        });
 	      }
 
@@ -340,17 +372,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_renderFooter',
 	    value: function _renderFooter() {
-	      var _this4 = this;
+	      var _this5 = this;
 
 	      var closeMenu = function closeMenu() {
-	        return _this4._setOpen(false);
+	        return _this5._setOpen(false);
 	      };
 	      return this.props.renderFooter(closeMenu);
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this5 = this;
+	      var _this6 = this;
 
 	      var _props = this.props;
 	      var modifier = _props.modifier;
@@ -410,7 +442,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              'ul',
 	              { className: 'react-select__options' },
 	              options.map(function (option) {
-	                return _this5._renderOption(option);
+	                return _this6._renderOption(option);
 	              })
 	            ),
 	            this._renderFooter()
@@ -423,14 +455,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: {
 	      name: _react.PropTypes.string,
 	      value: _react.PropTypes.any,
-	      options: _react.PropTypes.array.isRequired,
+	      options: _react.PropTypes.array,
 	      multiple: _react.PropTypes.bool,
 	      disabled: _react.PropTypes.bool,
 	      offset: _react.PropTypes.string,
 	      autoWidth: _react.PropTypes.bool,
-	      renderTrigger: _react.PropTypes.func.isRequired,
-	      renderContent: _react.PropTypes.func.isRequired,
-	      renderOption: _react.PropTypes.func.isRequired,
+	      renderTrigger: _react.PropTypes.func,
+	      renderContent: _react.PropTypes.func,
+	      renderOption: _react.PropTypes.func,
 	      renderHeader: _react.PropTypes.func,
 	      renderFooter: _react.PropTypes.func,
 	      onChange: _react.PropTypes.func
@@ -439,10 +471,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'defaultProps',
 	    value: {
-	      //name: null, // generate uuid for aria labels
+	      //name: this._id, // use uuid if no name for aria labels
 	      value: null,
 	      options: [],
-	      //multiple: false, // whether or not the click passed will close the menu, allows mutliple options to be selected
+	      multiple: false,
 	      disabled: false,
 	      offset: '0px 0px',
 	      autoWidth: true,
@@ -470,18 +502,104 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 3 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
+	'use strict';
+
+	module.exports = __webpack_require__(4);
 
 /***/ },
 /* 4 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	* @providesModule shallowCompare
+	*/
+
+	'use strict';
+
+	var shallowEqual = __webpack_require__(5);
+
+	/**
+	 * Does a shallow comparison for props and state.
+	 * See ReactComponentWithPureRenderMixin
+	 */
+	function shallowCompare(instance, nextProps, nextState) {
+	  return !shallowEqual(instance.props, nextProps) || !shallowEqual(instance.state, nextState);
+	}
+
+	module.exports = shallowCompare;
 
 /***/ },
 /* 5 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule shallowEqual
+	 * @typechecks
+	 * 
+	 */
+
+	'use strict';
+
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+
+	/**
+	 * Performs equality by iterating through keys on an object and returning false
+	 * when any key has values which are not strictly equal between the arguments.
+	 * Returns true when the values of all keys are strictly equal.
+	 */
+	function shallowEqual(objA, objB) {
+	  if (objA === objB) {
+	    return true;
+	  }
+
+	  if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) {
+	    return false;
+	  }
+
+	  var keysA = Object.keys(objA);
+	  var keysB = Object.keys(objB);
+
+	  if (keysA.length !== keysB.length) {
+	    return false;
+	  }
+
+	  // Test for A's keys different from B.
+	  var bHasOwnProperty = hasOwnProperty.bind(objB);
+	  for (var i = 0; i < keysA.length; i++) {
+	    if (!bHasOwnProperty(keysA[i]) || objA[keysA[i]] !== objB[keysA[i]]) {
+	      return false;
+	    }
+	  }
+
+	  return true;
+	}
+
+	module.exports = shallowEqual;
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_6__;
+
+/***/ },
+/* 7 */
 /***/ function(module, exports) {
 
 	'use strict';
