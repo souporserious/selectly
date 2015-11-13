@@ -4,17 +4,31 @@ import TetherElement from 'react-tether'
 import EventsHandler from './Events-Handler'
 
 const eventsHandler = new EventsHandler()
-const defaultTrigger = (currentOption, isActive, isDisabled) => {
-  return(
+const defaultTrigger = (currentOptions, isActive, isDisabled) => {
+  const isMultiple = (currentOptions.constructor === Array)
+
+  if (!isMultiple) {
+    currentOptions = [currentOptions]
+  }
+
+  return (
     <button
       type="button"
       className={
         'react-select__trigger' +
+        (isMultiple ? ' react-select__trigger--multiple' : '') +
         (isActive ? ' react-select__trigger--active' : '') +
         (isDisabled ? ' react-select__trigger--disabled' : '')
       }
     >
-      {currentOption.label}
+      {currentOptions.map(currentOption =>
+        <span
+          key={currentOption.label}
+          className="react-select__trigger__option"
+        >
+          {currentOption.label}
+        </span>
+      )}
       <svg
         width="21px"
         height="21px"
@@ -188,7 +202,22 @@ class Selectly extends Component {
 
   _getCurrentOption() {
     const { value } = this.props
-    return value ? this._lookup[value] : this._firstOption
+    let option = null
+
+    // if no value provided return the first option
+    if (!value) {
+      option = this._firstOption
+    // if an array we return an array of the selected options back
+    } else if (value.constructor === Array) {
+      option = value.map(currValue =>
+        this._lookup[currValue]
+      )
+    // otherwise just return the single selected option
+    } else {
+      option = this._lookup[value]
+    }
+
+    return option
   }
 
   _handleOptionClick = (option) => {
@@ -202,6 +231,8 @@ class Selectly extends Component {
       setTimeout(() => {
         this.refs.tether.disable()
       }, 0)
+    } else {
+
     }
   }
 

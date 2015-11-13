@@ -17,7 +17,7 @@
   box-sizing: border-box;
   display: flex;
   width: 100%;
-  height: auto;
+  height: 31px;
   padding: 6px 27px 6px 6px;
   font-size: 14px;
   text-align: left;
@@ -32,6 +32,20 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+}
+
+.react-select__trigger__option {
+  user-select: none;
+  
+  & + & {
+    margin-left: 6px;
+  }
+
+  .react-select__trigger--multiple & {
+    padding: 0 3px;
+    border-radius: 2px;
+    background: #E6F9FF;
   }
 }
 

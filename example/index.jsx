@@ -13,7 +13,7 @@ import './main.scss'
 // accessible:
 // http://www.w3.org/TR/WCAG10-HTML-TECHS/#forms
 
-class App extends Component {
+class Demo1 extends Component {
   state = {
     currentValue: null,
     options: [
@@ -56,6 +56,66 @@ class App extends Component {
         }
         onChange={this._handleChange}
       />
+    )
+  }
+}
+
+class Demo2 extends Component {
+  state = {
+    currentValue: ['dog', 'cat'],
+    options: [
+      { value: 'dog', label: 'Dog' },
+      { value: 'cat', label: 'Cat' },
+      { value: 'it', label: 'It' }
+    ]
+  }
+
+  _handleChange = (option) => {
+    let currentValue = this.state.currentValue.slice(0)
+    let pos = currentValue.indexOf(option.value)
+    let value = null
+
+    if (pos > -1) {
+      currentValue.splice(pos, 1)
+    } else {
+      currentValue.push(option.value)
+    }
+
+    this.setState({currentValue})
+  }
+
+  render() {
+    const { currentValue, options } = this.state
+
+    return(
+      <Selectly
+        name="selectly"
+        value={currentValue}
+        options={options}
+        multiple={true}
+        offset="1px 0px"
+        renderFooter={closeMenu =>
+          <button onClick={() => closeMenu()}>
+            Done
+          </button>
+        }
+        onChange={this._handleChange}
+      />
+    )
+  }
+}
+
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <div style={{margin: '0 0 24px'}}>
+          <Demo1/>
+        </div>
+        <div style={{margin: '0 0 24px'}}>
+          <Demo2/>
+        </div>
+      </div>
     )
   }
 }
