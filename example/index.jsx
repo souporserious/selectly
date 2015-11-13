@@ -61,11 +61,12 @@ class Demo1 extends Component {
 
 class Demo2 extends Component {
   state = {
-    currentValue: ['dog', 'cat'],
+    currentValue: ['the-shining', 'halloween'],
     options: [
-      { value: 'dog', label: 'Dog' },
-      { value: 'cat', label: 'Cat' },
-      { value: 'it', label: 'It' }
+      { value: 'the-shining', label: 'The Shining' },
+      { value: 'poltergeist', label: 'Poltergeist' },
+      { value: 'halloween', label: 'Halloween' },
+      { value: 'pumpkinhead', label: 'Pumpkinhead' }
     ]
   }
 
