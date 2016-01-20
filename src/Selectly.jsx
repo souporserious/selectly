@@ -88,6 +88,7 @@ class Selectly extends Component {
     disabled: PropTypes.bool,
     offset: PropTypes.string,
     autoWidth: PropTypes.bool,
+    nativeSelect: PropTypes.bool,
     renderTrigger: PropTypes.func,
     renderContent: PropTypes.func,
     renderOption: PropTypes.func,
@@ -97,13 +98,14 @@ class Selectly extends Component {
   }
 
   static defaultProps = {
-    //name: this._id, // use uuid if no name for aria labels
+    name: this._id,
     value: null,
     options: [],
     multiple: false,
     disabled: false,
     offset: '0px 0px',
     autoWidth: true,
+    nativeSelect: true,
     renderTrigger: defaultTrigger,
     renderContent: defaultContent,
     renderOption: defaultOption,
@@ -189,9 +191,9 @@ class Selectly extends Component {
         // store in lookup so we can retrieve the selected option
         _lookup[value] = option
 
-        // if the first option store it so we can access it
+        // if the first option, store it so we can access it
         // for the current value, this way we don't have to
-        // worry about transforming the object into an array
+        // worry about trying to find it again
         if (!this._firstOption) {
           this._firstOption = option
         }
@@ -231,8 +233,6 @@ class Selectly extends Component {
       setTimeout(() => {
         this.refs.tether.disable()
       }, 0)
-    } else {
-
     }
   }
 
@@ -269,8 +269,30 @@ class Selectly extends Component {
     return this.props.renderFooter(closeMenu)
   }
 
+  _renderNativeSelect() {
+    const { name, value, multiple } = this.props
+    return (
+      <select
+        name={name}
+        value={value}
+        multiple={multiple}
+        onChange={() => null}
+        style={{display: 'none'}}
+      >
+        {
+          Object.keys(this._lookup).map(key => {
+            const { value, label } = this._lookup[key]
+            return (
+              <option key={value} value={value}>{label}</option>
+            )
+          })
+        }
+      </select>
+    )
+  }
+
   render() {
-    const { modifier, options, disabled, offset, wrapper, autoWidth } = this.props
+    const { modifier, options, disabled, offset, wrapper, autoWidth, nativeSelect } = this.props
     const { isOpen, width } = this.state
     const currentOption = this._getCurrentOption()
     let triggerClassName = 'react-select'
@@ -321,6 +343,7 @@ class Selectly extends Component {
             isOpen
           )}
         </TetherElement>
+        {nativeSelect && this._renderNativeSelect()}
       </div>
     )
   }
