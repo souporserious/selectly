@@ -1,4 +1,4 @@
-## Selectly 0.1.1
+## Selectly 0.1.2
 
 Build custom, accessible, select menus in React. Provides a low level way to build the select menu you need.
 

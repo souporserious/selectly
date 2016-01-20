@@ -79,6 +79,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
+	var _this8 = this;
+
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -214,7 +216,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        setTimeout(function () {
 	          _this.refs.tether.disable();
 	        }, 0);
-	      } else {}
+	      }
 	    };
 	  }
 
@@ -298,9 +300,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	          // store in lookup so we can retrieve the selected option
 	          _lookup[value] = _option;
 
-	          // if the first option store it so we can access it
+	          // if the first option, store it so we can access it
 	          // for the current value, this way we don't have to
-	          // worry about transforming the object into an array
+	          // worry about trying to find it again
 	          if (!this._firstOption) {
 	            this._firstOption = _option;
 	          }
@@ -380,17 +382,52 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this.props.renderFooter(closeMenu);
 	    }
 	  }, {
-	    key: 'render',
-	    value: function render() {
+	    key: '_renderNativeSelect',
+	    value: function _renderNativeSelect() {
 	      var _this6 = this;
 
 	      var _props = this.props;
-	      var modifier = _props.modifier;
-	      var options = _props.options;
-	      var disabled = _props.disabled;
-	      var offset = _props.offset;
-	      var wrapper = _props.wrapper;
-	      var autoWidth = _props.autoWidth;
+	      var name = _props.name;
+	      var value = _props.value;
+	      var multiple = _props.multiple;
+
+	      return _react2['default'].createElement(
+	        'select',
+	        {
+	          name: name,
+	          value: value,
+	          multiple: multiple,
+	          onChange: function () {
+	            return null;
+	          },
+	          style: { display: 'none' }
+	        },
+	        Object.keys(this._lookup).map(function (key) {
+	          var _lookup$key = _this6._lookup[key];
+	          var value = _lookup$key.value;
+	          var label = _lookup$key.label;
+
+	          return _react2['default'].createElement(
+	            'option',
+	            { key: value, value: value },
+	            label
+	          );
+	        })
+	      );
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this7 = this;
+
+	      var _props2 = this.props;
+	      var modifier = _props2.modifier;
+	      var options = _props2.options;
+	      var disabled = _props2.disabled;
+	      var offset = _props2.offset;
+	      var wrapper = _props2.wrapper;
+	      var autoWidth = _props2.autoWidth;
+	      var nativeSelect = _props2.nativeSelect;
 	      var _state = this.state;
 	      var isOpen = _state.isOpen;
 	      var width = _state.width;
@@ -442,12 +479,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	              'ul',
 	              { className: 'react-select__options' },
 	              options.map(function (option) {
-	                return _this6._renderOption(option);
+	                return _this7._renderOption(option);
 	              })
 	            ),
 	            this._renderFooter()
 	          ), isOpen)
-	        )
+	        ),
+	        nativeSelect && this._renderNativeSelect()
 	      );
 	    }
 	  }], [{
@@ -460,6 +498,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      disabled: _react.PropTypes.bool,
 	      offset: _react.PropTypes.string,
 	      autoWidth: _react.PropTypes.bool,
+	      nativeSelect: _react.PropTypes.bool,
 	      renderTrigger: _react.PropTypes.func,
 	      renderContent: _react.PropTypes.func,
 	      renderOption: _react.PropTypes.func,
@@ -471,13 +510,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'defaultProps',
 	    value: {
-	      //name: this._id, // use uuid if no name for aria labels
+	      name: _this8._id,
 	      value: null,
 	      options: [],
 	      multiple: false,
 	      disabled: false,
 	      offset: '0px 0px',
 	      autoWidth: true,
+	      nativeSelect: true,
 	      renderTrigger: defaultTrigger,
 	      renderContent: defaultContent,
 	      renderOption: defaultOption,

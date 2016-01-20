@@ -1,4 +1,7 @@
 ## CHANGELOG
+### 0.1.2
+Added `nativeSelect` prop that is true by default, use with `name` prop to get values from selected options
+
 ### 0.1.1
 
 Better support for `multiple` prop
