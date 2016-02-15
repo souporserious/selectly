@@ -1,17 +1,59 @@
 import React, { Component, Children, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import { spring } from 'react-motion'
-import Transition from 'react-motion-ui-pack'
-import Selectly from '../src/selectly'
+import { Select, Option, utils } from '../src/selectly.js'
 
 import '../src/selectly.scss'
 import './main.scss'
+
+const { buildLookup, getOption } = utils
 
 // TODO:
 // recreate these:
 // http://tympanus.net/Development/SelectInspiration/index4.html
 // accessible:
 // http://www.w3.org/TR/WCAG10-HTML-TECHS/#forms
+
+class MySelect extends Component {
+  _renderOptions() {
+    return this.props.options.map(({ label, optgroup }) =>
+      <li key={label} className="react-select-optgroup">
+        <strong className="react-select-optgroup__title">{label}</strong>
+        {
+          optgroup.map(option =>
+            <Option
+              key={option.value}
+              value={option.value}
+              className="react-select-option"
+            >
+              {option.label}
+            </Option>
+          )
+        }
+      </li>
+    )
+  }
+
+  render() {
+    const { value, options, onChange } = this.props
+    const { label } = getOption(value, options)
+
+    return (
+      <Select
+        ref="select"
+        classPrefix="react-select"
+        onChange={onChange}
+      >
+        <div className="react-select-trigger">
+          {label}
+        </div>
+        <ul className="react-select-options">
+          {this._renderOptions()}
+        </ul>
+      </Select>
+    )
+  }
+}
 
 class Demo1 extends Component {
   state = {
@@ -32,27 +74,17 @@ class Demo1 extends Component {
     ]
   }
 
-  _handleChange = (option) => {
-    this.setState({currentValue: option.value})
+  _handleChange = (value) => {
+    this.setState({currentValue: value})
   }
 
   render() {
     const { currentValue, options } = this.state
 
-    return(
-      <Selectly
-        name="selectly-1"
+    return (
+      <MySelect
         value={currentValue}
         options={options}
-        offset="1px 0px"
-        renderContent={(content, isOpen) =>
-          <Transition
-            enter={{opacity: spring(1, [300, 30]), scale: 1.00}}
-            leave={{opacity: spring(0, [300, 30]), scale: 0.98}}
-          >
-            {isOpen && content}
-          </Transition>
-        }
         onChange={this._handleChange}
       />
     )
@@ -132,7 +164,7 @@ class Demo3 extends Component {
 
   _handleOption = ({value, label, onSelect}) => {
     const isSelected = this.state.currentValue.indexOf(value) > -1
-    
+
     return (
       <li
         key={value}
@@ -182,12 +214,12 @@ class App extends Component {
         <div style={{margin: '0 0 24px'}}>
           <Demo1/>
         </div>
-        <div style={{margin: '0 0 24px'}}>
+        {/*<div style={{margin: '0 0 24px'}}>
           <Demo2/>
         </div>
         <div style={{margin: '0 0 24px'}}>
           <Demo3/>
-        </div>
+        </div>*/}
       </div>
     )
   }

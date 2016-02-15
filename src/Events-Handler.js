@@ -24,7 +24,7 @@ class EventsHandler {
     const pos = this._queue.indexOf(component)
     if (pos > -1) {
       this._queue.splice(pos, 1)
-    }    
+    }
   }
 
   _documentClickHandler = (e) => {

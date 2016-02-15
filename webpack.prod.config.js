@@ -6,7 +6,7 @@ var library = 'Selectly'
 
 var config = {
   entry: {
-    index: './src/index.js',
+    index: './src/' + filename + '.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
@@ -28,7 +28,7 @@ var config = {
   externals: {
     'react': 'React',
     'react-dom': 'ReactDOM',
-    'react-tether': 'TetherElement'
+    'react-tether': 'TetherComponent'
   },
 };
 
@@ -40,7 +40,7 @@ if(TARGET === 'minify') {
       warnings: false
     },
     mangle: {
-      except: ['React', 'ReactDOM', library]
+      except: ['React', 'ReactDOM', library, 'TetherComponent']
     }
   }));
 }

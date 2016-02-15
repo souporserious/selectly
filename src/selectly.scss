@@ -13,7 +13,7 @@
   pointer-events: auto;
 }
 
-.react-select__trigger {
+.react-select-trigger {
   box-sizing: border-box;
   display: flex;
   width: 100%;
@@ -35,47 +35,43 @@
   }
 }
 
-.react-select__trigger__option {
+.react-select-trigger__option {
   user-select: none;
 
   & + & {
     margin-left: 6px;
   }
 
-  .react-select__trigger--multiple & {
+  .react-select-trigger--multiple & {
     padding: 0 3px;
     border-radius: 2px;
     background: #E6F9FF;
   }
 }
 
-.react-select__trigger__arrow {
+.react-select-trigger__arrow {
   position: absolute;
   right: 6px;
   top: 50%;
   transform: translateY(-50%);
 }
 
-.react-select-drop {
+.react-select-options {
   width: 100%;
   max-height: 180px;
   padding: 3px 0;
+  margin: 0;
   border: 1px solid #e1e1e1;
   border-radius: 2px;
   box-shadow: 0 2px 4px 0 rgba(218, 221, 222, 0.35);
   background-color: white;
+  list-style: none;
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-tap-highlight-color: transparent;
 }
 
-.react-select__options {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.react-select__option {
+.react-select-option {
   display: flex;
   justify-content: space-between;
   padding: 4px 8px;
@@ -89,14 +85,14 @@
   }
 }
 
-.react-select__option__label {
+.react-select-option__label {
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.react-select__optgroup {
+.react-select-optgroup {
   display: block;
   padding: 3px 0;
   cursor: default;
@@ -105,7 +101,7 @@
   }
 }
 
-.react-select__optgroup__title {
+.react-select-optgroup__title {
   display: block;
   padding: 0 12px 4px;
   font-weight: 700;
