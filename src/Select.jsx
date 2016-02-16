@@ -1,4 +1,5 @@
 import React, { Component, PropTypes, cloneElement } from 'react'
+import ReactDOM, { findDOMNode } from 'react-dom'
 import TetherComponent from 'react-tether'
 import EventsHandler from './Events-Handler'
 
@@ -106,14 +107,14 @@ class Select extends Component {
       >
         {
           cloneElement(firstChild, {
-            ref: c => { this._trigger = c }
+            ref: c => { this._trigger = findDOMNode(c) }
           })
         }
         {
           renderOptions(
             isOpen &&
             cloneElement(secondChild, {
-              ref: c => { this._options = c },
+              ref: c => { this._options = findDOMNode(c) },
               style: {
                 width: width || '',
                 ...secondChild.props.style
