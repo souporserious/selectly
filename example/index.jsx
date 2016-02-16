@@ -14,42 +14,107 @@ const { buildLookup, getOption } = utils
 // accessible:
 // http://www.w3.org/TR/WCAG10-HTML-TECHS/#forms
 
-class MySelect extends Component {
-  _renderOptions() {
-    return this.props.options.map(({ label, optgroup }) =>
-      <li key={label} className="react-select-optgroup">
-        <strong className="react-select-optgroup__title">{label}</strong>
-        {
-          optgroup.map(option =>
-            <Option
-              key={option.value}
-              value={option.value}
-              className="react-select-option"
-            >
-              {option.label}
-            </Option>
-          )
+class Trigger extends Component {
+  static contextTypes = {
+    isOpen: PropTypes.bool
+  }
+
+  render() {
+    let { currentOptions, isDisabled } = this.props
+    const isMultiple = (currentOptions.constructor === Array)
+    const isActive = this.context.isOpen
+
+    if (!isMultiple) {
+      currentOptions = [currentOptions]
+    }
+
+    return (
+      <button
+        type="button"
+        className={
+          'react-select-trigger' +
+          (isMultiple ? ' react-select-trigger--multiple' : '') +
+          (isActive ? ' react-select-trigger--active' : '') +
+          (isDisabled ? ' react-select-trigger--disabled' : '')
         }
+      >
+        {currentOptions.map(currentOption =>
+          <span
+            key={currentOption.label}
+            className="react-select-trigger__option"
+          >
+            {currentOption.label}
+          </span>
+        )}
+        <svg
+          width="21px"
+          height="21px"
+          viewBox="0 0 21 21"
+          className="react-select-trigger__arrow"
+        >
+          <polygon points="10.5,12 7,8.5 14,8.5"/>
+        </svg>
+      </button>
+    )
+  }
+}
+
+class MySelect extends Component {
+  defaultProps = {
+    multiple: false
+  }
+
+  _renderOption({ value, label }) {
+    return (
+      <Option
+        key={label}
+        value={value}
+        className="react-select-option"
+      >
+        {label}
+      </Option>
+    )
+  }
+
+  _renderOptGroup({ label, optgroup }) {
+    return (
+      <li key={label} className="react-select-optgroup">
+        <strong
+          title={label}
+          className="react-select-optgroup__title"
+        >
+          {label}
+        </strong>
+        {this._renderOptions(optgroup)}
       </li>
     )
   }
 
+  _renderOptions(options) {
+    return (
+      <ul className="react-select-options">
+        {options.map(option =>
+          option.optgroup ?
+          this._renderOptGroup(option) :
+          this._renderOption(option)
+        )}
+      </ul>
+    )
+  }
+
   render() {
-    const { value, options, onChange } = this.props
-    const { label } = getOption(value, options)
+    const { value, options, multiple, onChange } = this.props
+    const currentOption = getOption(value, options)
 
     return (
       <Select
         ref="select"
         classPrefix="react-select"
+        multiple={multiple}
         onChange={onChange}
       >
-        <div className="react-select-trigger">
-          {label}
-        </div>
-        <ul className="react-select-options">
-          {this._renderOptions()}
-        </ul>
+        <Trigger currentOptions={currentOption} />
+        {this._renderOptions(options)}
       </Select>
     )
   }
@@ -102,15 +167,14 @@ class Demo2 extends Component {
     ]
   }
 
-  _handleChange = (option) => {
+  _handleChange = (value) => {
     let currentValue = this.state.currentValue.slice(0)
-    let pos = currentValue.indexOf(option.value)
-    let value = null
+    let pos = currentValue.indexOf(value)
 
     if (pos > -1) {
       currentValue.splice(pos, 1)
     } else {
-      currentValue.push(option.value)
+      currentValue.push(value)
     }
 
     this.setState({currentValue})
@@ -119,18 +183,11 @@ class Demo2 extends Component {
   render() {
     const { currentValue, options } = this.state
 
-    return(
-      <Selectly
-        name="selectly-2"
+    return (
+      <MySelect
         value={currentValue}
         options={options}
-        multiple={true}
-        offset="1px 0px"
-        renderFooter={closeMenu =>
-          <button onClick={() => closeMenu()}>
-            Done
-          </button>
-        }
+        multiple
         onChange={this._handleChange}
       />
     )
@@ -214,10 +271,10 @@ class App extends Component {
         <div style={{margin: '0 0 24px'}}>
           <Demo1/>
         </div>
-        {/*<div style={{margin: '0 0 24px'}}>
+        <div style={{margin: '0 0 24px'}}>
           <Demo2/>
         </div>
-        <div style={{margin: '0 0 24px'}}>
+        {/*<div style={{margin: '0 0 24px'}}>
           <Demo3/>
         </div>*/}
       </div>
