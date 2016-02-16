@@ -6,13 +6,13 @@ class EventsHandler {
   }
 
   create() {
-    document.addEventListener('click', this._documentClickHandler)
+    document.addEventListener('mousedown', this._documentMouseDownHandler)
     window.addEventListener('resize', this._resizeHandler)
   }
 
   destroy() {
     this._queue = []
-    document.removeEventListener('click', this._documentClickHandler)
+    document.removeEventListener('mousedown', this._documentMouseDownHandler)
     window.removeEventListener('resize', this._resizeHandler)
   }
 
@@ -27,7 +27,7 @@ class EventsHandler {
     }
   }
 
-  _documentClickHandler = (e) => {
+  _documentMouseDownHandler = (e) => {
     for (let i = this._queue.length; i--;) {
       this._queue[i]._toggleOpen(e)
     }

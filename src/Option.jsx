@@ -6,7 +6,7 @@ class Option extends Component {
   }
 
   static defaultProps = {
-    component: 'div'
+    component: 'li'
   }
 
   static contextTypes = {
@@ -14,12 +14,12 @@ class Option extends Component {
   }
 
   _handleClick() {
-    const { onClick } = this.props
+    const { onMouseUp } = this.props
 
     this.context.onOptionSelect(this.props.value)
 
-    if (typeof onClick === 'function') {
-      onClick()
+    if (typeof onMouseUp === 'function') {
+      onMouseUp()
     }
   }
 
@@ -29,7 +29,7 @@ class Option extends Component {
     return createElement(
       component, {
         ...props,
-        onClick: () => this._handleClick()
+        onMouseUp: () => this._handleClick()
       },
       children
     )

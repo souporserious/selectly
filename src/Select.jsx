@@ -29,7 +29,8 @@ class Select extends Component {
   }
 
   static childContextTypes = {
-    onOptionSelect: PropTypes.func
+    onOptionSelect: PropTypes.func,
+    isOpen: PropTypes.bool
   }
 
   state = {
@@ -44,7 +45,8 @@ class Select extends Component {
           this.setOpen(false)
         }
         this.props.onChange(option)
-      }
+      },
+      isOpen: this.state.isOpen
     }
   }
 
