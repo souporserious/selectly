@@ -145,7 +145,6 @@ class Demo1 extends Component {
 
   render() {
     const { currentValue, options } = this.state
-
     return (
       <MySelect
         value={currentValue}
@@ -168,21 +167,13 @@ class Demo2 extends Component {
   }
 
   _handleChange = (value) => {
-    let currentValue = this.state.currentValue.slice(0)
-    let pos = currentValue.indexOf(value)
-
-    if (pos > -1) {
-      currentValue.splice(pos, 1)
-    } else {
-      currentValue.push(value)
-    }
-
-    this.setState({currentValue})
+    this.setState({
+      currentValue: multipleOptions(this.state.currentValue, value)
+    })
   }
 
   render() {
     const { currentValue, options } = this.state
-
     return (
       <MySelect
         value={currentValue}
@@ -221,7 +212,6 @@ class Demo3 extends Component {
 
   _handleOption = ({value, label, onSelect}) => {
     const isSelected = this.state.currentValue.indexOf(value) > -1
-
     return (
       <li
         key={value}
@@ -237,8 +227,7 @@ class Demo3 extends Component {
 
   render() {
     const { currentValue, options } = this.state
-
-    return(
+    return (
       <Selectly
         name="selectly-3"
         value={currentValue}
@@ -306,10 +295,10 @@ class App extends Component {
         <div style={{margin: '0 0 24px'}}>
           <Demo2/>
         </div>
-        <MultiSelect/>
         {/*<div style={{margin: '0 0 24px'}}>
           <Demo3/>
         </div>*/}
+        <MultiSelect/>
       </div>
     )
   }
