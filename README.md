@@ -8,21 +8,33 @@ Build custom, accessible, select menus in React. Provides a low level way to bui
 
 `bower install selectly --save`
 
-## Example Usage
+## Example Usage (ES2015 Stage 0)
 
 ```javascript
 import { Select, Option, utils } from 'Selectly'
+const { multipleOptions } = utils
 
-class SimpleSelect extends Component {
+class MultiSelect extends Component {
   state = {
-    currentValue: 'Select A Color'
+    defaultValue: 'Select a color',
+    currentValues: []
+  }
+
+  _handleChange = (value) => {
+    this.setState({
+      currentValues: multipleOptions(this.state.currentValues, value)
+    })
   }
 
   render() {
+    const { defaultValue, currentValues } = this.state
     return (
-      <Select onChange={value => this.setState({ currentValue: value })}>
+      <Select multiple onChange={this._handleChange}>
         <button>
-          {this.state.currentValue}
+          { currentValues.length > 0
+            ? currentValues
+            : defaultValue
+          }
         </button>
         <ul>
           <Option value="red">Red</Option>

@@ -6,7 +6,7 @@ import { Select, Option, utils } from '../src/selectly.js'
 import '../src/selectly.scss'
 import './main.scss'
 
-const { buildLookup, getOption } = utils
+const { buildLookup, getOption, multipleOptions } = utils
 
 // TODO:
 // recreate these:
@@ -264,6 +264,38 @@ class Demo3 extends Component {
   }
 }
 
+class MultiSelect extends Component {
+  state = {
+    defaultValue: 'Select a color',
+    currentValues: []
+  }
+
+  _handleChange = (value) => {
+    this.setState({
+      currentValues: multipleOptions(this.state.currentValues, value)
+    })
+  }
+
+  render() {
+    const { defaultValue, currentValues } = this.state
+    return (
+      <Select multiple onChange={this._handleChange}>
+        <button>
+          { currentValues.length > 0
+            ? currentValues
+            : defaultValue
+          }
+        </button>
+        <ul>
+          <Option value="red">Red</Option>
+          <Option value="green">Green</Option>
+          <Option value="blue">Blue</Option>
+        </ul>
+      </Select>
+    )
+  }
+}
+
 class App extends Component {
   render() {
     return (
@@ -274,6 +306,7 @@ class App extends Component {
         <div style={{margin: '0 0 24px'}}>
           <Demo2/>
         </div>
+        <MultiSelect/>
         {/*<div style={{margin: '0 0 24px'}}>
           <Demo3/>
         </div>*/}
