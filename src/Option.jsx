@@ -2,7 +2,8 @@ import React, { Component, PropTypes, createElement } from 'react'
 
 class Option extends Component {
   static propTypes = {
-    component: PropTypes.string
+    component: PropTypes.string,
+    value: PropTypes.any.isRequired
   }
 
   static defaultProps = {
@@ -13,7 +14,7 @@ class Option extends Component {
     onOptionSelect: PropTypes.func
   }
 
-  _handleClick() {
+  _handleMouseUp() {
     const { onMouseUp } = this.props
 
     this.context.onOptionSelect(this.props.value)
@@ -29,7 +30,7 @@ class Option extends Component {
     return createElement(
       component, {
         ...props,
-        onMouseUp: () => this._handleClick()
+        onMouseUp: () => this._handleMouseUp()
       },
       children
     )

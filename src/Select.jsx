@@ -1,7 +1,8 @@
-import React, { Component, PropTypes, cloneElement } from 'react'
+import React, { Component, PropTypes, Children, cloneElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import TetherComponent from 'react-tether'
 import EventsHandler from './Events-Handler'
+import childrenPropType from './children-prop-type'
 
 const eventsHandler = new EventsHandler()
 
@@ -14,7 +15,8 @@ class Select extends Component {
     classPrefix: PropTypes.string,
     autoWidth: PropTypes.bool,
     renderOptions: PropTypes.func,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    children: childrenPropType
   }
 
   static defaultProps = {
@@ -93,8 +95,9 @@ class Select extends Component {
   render() {
     const { offset, classPrefix, autoWidth, children, renderOptions } = this.props
     const { isOpen, width } = this.state
-    const firstChild = children[0]
-    const secondChild = children[1]
+    const childrenArray = Children.toArray(children)
+    const firstChild = childrenArray[0]
+    const secondChild = childrenArray[1]
 
     return (
       <TetherComponent
