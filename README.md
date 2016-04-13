@@ -91,6 +91,10 @@ What element is used to display an option. Defaults to `li`.
 
 A value of any kind is required for each option. This is what gets passed to the `onChange` callback in the `Select` component.
 
+### `anything`
+
+Any other valid React props are allowed as well like `className` for instance.
+
 ## Run Example
 
 clone repo
