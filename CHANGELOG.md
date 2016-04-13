@@ -1,4 +1,7 @@
 ## CHANGELOG
+### 0.2.0
+Complete rebuild using context that provides a `Select` and `Option` components to build custom select menus.
+
 ### 0.1.2
 Added `nativeSelect` prop that is true by default, use with `name` prop to get values from selected options
 

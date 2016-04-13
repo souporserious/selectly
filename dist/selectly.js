@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("React"), require("TetherElement"));
+		module.exports = factory(require("React"), require("ReactDOM"), require("TetherComponent"));
 	else if(typeof define === 'function' && define.amd)
-		define(["React", "TetherElement"], factory);
+		define(["React", "ReactDOM", "TetherComponent"], factory);
 	else if(typeof exports === 'object')
-		exports["Selectly"] = factory(require("React"), require("TetherElement"));
+		exports["Selectly"] = factory(require("React"), require("ReactDOM"), require("TetherComponent"));
 	else
-		root["Selectly"] = factory(root["React"], root["TetherElement"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__) {
+		root["Selectly"] = factory(root["React"], root["ReactDOM"], root["TetherComponent"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_7__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -60,17 +60,133 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
+	function _interopRequire(obj) { return obj && obj.__esModule ? obj['default'] : obj; }
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _Selectly = __webpack_require__(1);
+	var _utilsBuildLookup = __webpack_require__(1);
 
-	var _Selectly2 = _interopRequireDefault(_Selectly);
+	var _utilsBuildLookup2 = _interopRequireDefault(_utilsBuildLookup);
 
-	exports['default'] = _Selectly2['default'];
-	module.exports = exports['default'];
+	var _utilsGetOption = __webpack_require__(2);
+
+	var _utilsGetOption2 = _interopRequireDefault(_utilsGetOption);
+
+	var _utilsMultipleOptions = __webpack_require__(3);
+
+	var _utilsMultipleOptions2 = _interopRequireDefault(_utilsMultipleOptions);
+
+	var _Select = __webpack_require__(4);
+
+	exports.Select = _interopRequire(_Select);
+
+	var _Option = __webpack_require__(10);
+
+	exports.Option = _interopRequire(_Option);
+	var utils = {
+	  buildLookup: _utilsBuildLookup2['default'],
+	  getOption: _utilsGetOption2['default'],
+	  multipleOptions: _utilsMultipleOptions2['default']
+	};
+	exports.utils = utils;
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports["default"] = buildLookup;
+
+	function buildLookup(options) {
+	  var _lookup = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+	  for (var i = 0, len = options.length; i < len; i++) {
+	    var option = options[i];
+	    var optgroup = option.optgroup;
+	    var value = option.value;
+	    var label = option.label;
+
+	    if (optgroup) {
+	      buildLookup(optgroup, _lookup);
+	    } else {
+	      _lookup[value] = options[i];
+	    }
+	  }
+	  return _lookup;
+	}
+
+	module.exports = exports["default"];
+
+/***/ },
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports['default'] = getOption;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _buildLookup = __webpack_require__(1);
+
+	var _buildLookup2 = _interopRequireDefault(_buildLookup);
+
+	function getOption(value, options) {
+	  var lookup = (0, _buildLookup2['default'])(options);
+
+	  // if no value provided return the first option
+	  if (!value) {
+	    return lookup[Object.keys(lookup)[0]];
+	    // if an array we return an array of the selected options back
+	  } else if (value.constructor === Array) {
+	      return value.map(function (_value) {
+	        return lookup[_value];
+	      });
+	      // otherwise just return the single selected option
+	    } else {
+	        return lookup[value];
+	      }
+	}
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports["default"] = multipleOptions;
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+
+	function multipleOptions(options, value) {
+	  var newOptions = [].concat(_toConsumableArray(options));
+	  var pos = newOptions.indexOf(value);
+
+	  if (pos > -1) {
+	    newOptions.splice(pos, 1);
+	  } else {
+	    newOptions.push(value);
+	  }
+
+	  return newOptions;
+	}
+
+	module.exports = exports["default"];
+
+/***/ },
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -79,13 +195,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _this8 = this;
-
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -93,130 +207,58 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _react = __webpack_require__(2);
+	var _react = __webpack_require__(5);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactTether = __webpack_require__(3);
+	var _reactDom = __webpack_require__(6);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _reactTether = __webpack_require__(7);
 
 	var _reactTether2 = _interopRequireDefault(_reactTether);
 
-	var _EventsHandler = __webpack_require__(4);
+	var _EventsHandler = __webpack_require__(8);
 
 	var _EventsHandler2 = _interopRequireDefault(_EventsHandler);
 
+	var _childrenPropType = __webpack_require__(9);
+
+	var _childrenPropType2 = _interopRequireDefault(_childrenPropType);
+
 	var eventsHandler = new _EventsHandler2['default']();
-	var defaultTrigger = function defaultTrigger(currentOptions, isActive, isDisabled) {
-	  var isMultiple = currentOptions.constructor === Array;
 
-	  if (!isMultiple) {
-	    currentOptions = [currentOptions];
-	  }
+	var Select = (function (_Component) {
+	  _inherits(Select, _Component);
 
-	  return _react2['default'].createElement(
-	    'button',
-	    {
-	      type: 'button',
-	      className: 'react-select__trigger' + (isMultiple ? ' react-select__trigger--multiple' : '') + (isActive ? ' react-select__trigger--active' : '') + (isDisabled ? ' react-select__trigger--disabled' : '')
-	    },
-	    currentOptions.map(function (currentOption) {
-	      return _react2['default'].createElement(
-	        'span',
-	        {
-	          key: currentOption.label,
-	          className: 'react-select__trigger__option'
-	        },
-	        currentOption.label
-	      );
-	    }),
-	    _react2['default'].createElement(
-	      'svg',
-	      {
-	        width: '21px',
-	        height: '21px',
-	        viewBox: '0 0 21 21',
-	        className: 'react-select__trigger__arrow'
-	      },
-	      _react2['default'].createElement('polygon', { points: '10.5,12 7,8.5 14,8.5' })
-	    )
-	  );
-	};
-	var defaultContent = function defaultContent(content, isOpen) {
-	  return isOpen ? content : _react2['default'].createElement('span', null);
-	};
-	var defaultOption = function defaultOption(_ref, nestedOptions, level) {
-	  var value = _ref.value;
-	  var label = _ref.label;
-	  var onSelect = _ref.onSelect;
+	  function Select() {
+	    _classCallCheck(this, Select);
 
-	  return _react2['default'].createElement(
-	    'li',
-	    {
-	      key: value || label,
-	      className: nestedOptions ? 'react-select__optgroup' : 'react-select__option',
-	      onClick: !nestedOptions && onSelect
-	    },
-	    !nestedOptions ? _react2['default'].createElement(
-	      'div',
-	      {
-	        title: typeof label === 'string' && label || '',
-	        className: 'react-select__option__label'
-	      },
-	      label
-	    ) : _react2['default'].createElement(
-	      'strong',
-	      {
-	        title: label,
-	        className: 'react-select__optgroup__title'
-	      },
-	      label
-	    ),
-	    ' ',
-	    nestedOptions && _react2['default'].createElement(
-	      'ul',
-	      { className: 'react-select__options react-select__options--' + level },
-	      nestedOptions
-	    )
-	  );
-	};
-	var noopFunc = function noopFunc() {
-	  return null;
-	};
-
-	var Selectly = (function (_Component) {
-	  _inherits(Selectly, _Component);
-
-	  function Selectly() {
-	    var _this = this;
-
-	    _classCallCheck(this, Selectly);
-
-	    _get(Object.getPrototypeOf(Selectly.prototype), 'constructor', this).apply(this, arguments);
+	    _get(Object.getPrototypeOf(Select.prototype), 'constructor', this).apply(this, arguments);
 
 	    this.state = {
 	      isOpen: false,
-	      width: 0
-	    };
-	    this._id = 'S' + Math.abs(~ ~(Math.random() * new Date()));
-	    this._firstOption = null;
-	    this._lookup = this._buildLookup(this.props.options);
-
-	    this._handleOptionClick = function (option) {
-	      _this.props.onChange(option);
-
-	      if (!_this.props.multiple) {
-	        _this._setOpen(false);
-
-	        // for some reason tether won't get disabled on an option click,
-	        // this works for now, but need to look into fixing it
-	        setTimeout(function () {
-	          _this.refs.tether.disable();
-	        }, 0);
-	      }
+	      width: null
 	    };
 	  }
 
-	  _createClass(Selectly, [{
+	  _createClass(Select, [{
+	    key: 'getChildContext',
+	    value: function getChildContext() {
+	      var _this = this;
+
+	      return {
+	        onOptionSelect: function onOptionSelect(option) {
+	          if (!_this.props.multiple) {
+	            _this.setOpen(false);
+	          }
+	          _this.props.onChange(option);
+	        },
+	        isOpen: this.state.isOpen
+	      };
+	    }
+	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      // set the tethered content width
@@ -229,10 +271,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
-	      this._lookup = this._buildLookup(nextProps.options);
-
 	      if (this.props.disabled !== nextProps.disabled && nextProps.disabled === true) {
-	        this._setOpen(false);
+	        this.setOpen(false);
 	      }
 	    }
 	  }, {
@@ -241,304 +281,142 @@ return /******/ (function(modules) { // webpackBootstrap
 	      eventsHandler.remove(this);
 	    }
 	  }, {
-	    key: '_setOpen',
-	    value: function _setOpen(isOpen) {
+	    key: 'setOpen',
+	    value: function setOpen(isOpen) {
 	      this.setState({ isOpen: isOpen });
-
-	      // enable / disable tethered content
-	      if (isOpen) {
-	        this.refs.tether.enable();
-	      } else {
-	        this.refs.tether.disable();
-	      }
 	    }
 	  }, {
 	    key: '_setWidth',
 	    value: function _setWidth() {
 	      if (this.props.autoWidth) {
-	        this.setState({ width: this.refs.trigger.offsetWidth });
+	        this.setState({ width: this._trigger.offsetWidth });
 	      }
 	    }
 	  }, {
 	    key: '_toggleOpen',
-	    value: function _toggleOpen(e) {
+	    value: function _toggleOpen(_ref) {
+	      var target = _ref.target;
+
 	      if (this.props.disabled) return;
 
-	      if (this.refs.trigger.contains(e.target)) {
-	        this._setOpen(!this.state.isOpen);
-	      } else if (this.refs.drop && !this.refs.drop.contains(e.target)) {
-	        this._setOpen(false);
+	      if (this._trigger.contains(target)) {
+	        this.setOpen(!this.state.isOpen);
+	      } else if (this._options && !this._options.contains(target)) {
+	        this.setOpen(false);
 	      }
-	    }
-	  }, {
-	    key: '_buildLookup',
-	    value: function _buildLookup(options) {
-	      var _lookup = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-	      var len = options.length;
-
-	      for (var i = 0; i < len; i++) {
-	        var option = options[i];
-	        var optgroup = option.optgroup;
-	        var value = option.value;
-	        var label = option.label;
-
-	        if (optgroup) {
-	          this._buildLookup(optgroup, _lookup);
-	        } else {
-	          var _option = options[i];
-
-	          // store in lookup so we can retrieve the selected option
-	          _lookup[value] = _option;
-
-	          // if the first option, store it so we can access it
-	          // for the current value, this way we don't have to
-	          // worry about trying to find it again
-	          if (!this._firstOption) {
-	            this._firstOption = _option;
-	          }
-	        }
-	      }
-	      return _lookup;
-	    }
-	  }, {
-	    key: '_getCurrentOption',
-	    value: function _getCurrentOption() {
-	      var _this2 = this;
-
-	      var value = this.props.value;
-
-	      var option = null;
-
-	      // if no value provided return the first option
-	      if (!value) {
-	        option = this._firstOption;
-	        // if an array we return an array of the selected options back
-	      } else if (value.constructor === Array) {
-	          option = value.map(function (currValue) {
-	            return _this2._lookup[currValue];
-	          });
-	          // otherwise just return the single selected option
-	        } else {
-	            option = this._lookup[value];
-	          }
-
-	      return option;
-	    }
-	  }, {
-	    key: '_renderTrigger',
-	    value: function _renderTrigger(currentOption, isActive, isDisabled) {
-	      return this.props.renderTrigger(currentOption, isActive, isDisabled);
-	    }
-	  }, {
-	    key: '_renderHeader',
-	    value: function _renderHeader() {
-	      var _this3 = this;
-
-	      var closeMenu = function closeMenu() {
-	        return _this3._setOpen(false);
-	      };
-	      return this.props.renderHeader(closeMenu);
-	    }
-	  }, {
-	    key: '_renderOption',
-	    value: function _renderOption(option) {
-	      var _this4 = this;
-
-	      var level = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
-	      var value = option.value;
-	      var label = option.label;
-	      var optgroup = option.optgroup;
-
-	      var nestedOptions = null;
-
-	      // check if nested options passed in
-	      if (optgroup) {
-	        level++;
-	        nestedOptions = optgroup.map(function (nestedOption) {
-	          return _this4._renderOption(nestedOption, level);
-	        });
-	      }
-
-	      return this.props.renderOption(_extends({}, option, { onSelect: this._handleOptionClick.bind(null, option) }), nestedOptions, level);
-	    }
-	  }, {
-	    key: '_renderFooter',
-	    value: function _renderFooter() {
-	      var _this5 = this;
-
-	      var closeMenu = function closeMenu() {
-	        return _this5._setOpen(false);
-	      };
-	      return this.props.renderFooter(closeMenu);
-	    }
-	  }, {
-	    key: '_renderNativeSelect',
-	    value: function _renderNativeSelect() {
-	      var _this6 = this;
-
-	      var _props = this.props;
-	      var name = _props.name;
-	      var value = _props.value;
-	      var multiple = _props.multiple;
-
-	      return _react2['default'].createElement(
-	        'select',
-	        {
-	          name: name,
-	          value: value,
-	          multiple: multiple,
-	          onChange: function () {
-	            return null;
-	          },
-	          style: { display: 'none' }
-	        },
-	        Object.keys(this._lookup).map(function (key) {
-	          var _lookup$key = _this6._lookup[key];
-	          var value = _lookup$key.value;
-	          var label = _lookup$key.label;
-
-	          return _react2['default'].createElement(
-	            'option',
-	            { key: value, value: value },
-	            label
-	          );
-	        })
-	      );
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this7 = this;
+	      var _this2 = this;
 
-	      var _props2 = this.props;
-	      var modifier = _props2.modifier;
-	      var options = _props2.options;
-	      var disabled = _props2.disabled;
-	      var offset = _props2.offset;
-	      var wrapper = _props2.wrapper;
-	      var autoWidth = _props2.autoWidth;
-	      var nativeSelect = _props2.nativeSelect;
+	      var _props = this.props;
+	      var offset = _props.offset;
+	      var classPrefix = _props.classPrefix;
+	      var autoWidth = _props.autoWidth;
+	      var children = _props.children;
+	      var renderOptions = _props.renderOptions;
 	      var _state = this.state;
 	      var isOpen = _state.isOpen;
 	      var width = _state.width;
 
-	      var currentOption = this._getCurrentOption();
-	      var triggerClassName = 'react-select';
-	      var dropClassName = 'react-select-drop';
-	      var triggerStyle = {};
-	      var dropStyle = {};
-
-	      if (modifier) {
-	        triggerClassName += ' ' + triggerClassName + '--' + name;
-	        dropClassName += ' ' + dropClassName + '--' + name;
-	      }
-
-	      if (autoWidth) {
-	        dropStyle = { width: width };
-	      }
+	      var childrenArray = _react.Children.toArray(children);
+	      var firstChild = childrenArray[0];
+	      var secondChild = childrenArray[1];
 
 	      return _react2['default'].createElement(
-	        'div',
-	        { ref: 'trigger', className: triggerClassName },
-	        this._renderTrigger(currentOption, isOpen, disabled),
-	        _react2['default'].createElement(
-	          _reactTether2['default'],
-	          {
-	            ref: 'tether',
-	            target: this.refs.trigger,
-	            options: {
-	              attachment: 'top left',
-	              targetAttachment: 'bottom left',
-	              offset: offset,
-	              classPrefix: 'react-select',
-	              constraints: [{
-	                to: 'window',
-	                attachment: 'together'
-	              }]
-	            }
+	        _reactTether2['default'],
+	        {
+	          attachment: 'top left',
+	          targetAttachment: 'bottom left',
+	          offset: offset,
+	          classPrefix: classPrefix,
+	          constraints: [{
+	            to: 'window',
+	            attachment: 'together'
+	          }]
+	        },
+	        (0, _react.cloneElement)(firstChild, {
+	          ref: function ref(c) {
+	            _this2._trigger = (0, _reactDom.findDOMNode)(c);
+	          }
+	        }),
+	        renderOptions(isOpen && (0, _react.cloneElement)(secondChild, {
+	          ref: function ref(c) {
+	            _this2._options = (0, _reactDom.findDOMNode)(c);
 	          },
-	          this.props.renderContent(_react2['default'].createElement(
-	            'div',
-	            {
-	              ref: 'drop',
-	              className: dropClassName,
-	              style: dropStyle
-	            },
-	            this._renderHeader(),
-	            _react2['default'].createElement(
-	              'ul',
-	              { className: 'react-select__options' },
-	              options.map(function (option) {
-	                return _this7._renderOption(option);
-	              })
-	            ),
-	            this._renderFooter()
-	          ), isOpen)
-	        ),
-	        nativeSelect && this._renderNativeSelect()
+	          style: _extends({
+	            width: width || ''
+	          }, secondChild.props.style)
+	        }))
 	      );
 	    }
 	  }], [{
 	    key: 'propTypes',
 	    value: {
 	      name: _react.PropTypes.string,
-	      value: _react.PropTypes.any,
-	      options: _react.PropTypes.array,
 	      multiple: _react.PropTypes.bool,
 	      disabled: _react.PropTypes.bool,
 	      offset: _react.PropTypes.string,
+	      classPrefix: _react.PropTypes.string,
 	      autoWidth: _react.PropTypes.bool,
-	      nativeSelect: _react.PropTypes.bool,
-	      renderTrigger: _react.PropTypes.func,
-	      renderContent: _react.PropTypes.func,
-	      renderOption: _react.PropTypes.func,
-	      renderHeader: _react.PropTypes.func,
-	      renderFooter: _react.PropTypes.func,
-	      onChange: _react.PropTypes.func
+	      renderOptions: _react.PropTypes.func,
+	      onChange: _react.PropTypes.func,
+	      children: _childrenPropType2['default']
 	    },
 	    enumerable: true
 	  }, {
 	    key: 'defaultProps',
 	    value: {
-	      name: _this8._id,
-	      value: null,
-	      options: [],
+	      name: 'S' + Math.abs(~ ~(Math.random() * new Date())),
 	      multiple: false,
 	      disabled: false,
 	      offset: '0px 0px',
+	      classPrefix: 'selectly',
 	      autoWidth: true,
-	      nativeSelect: true,
-	      renderTrigger: defaultTrigger,
-	      renderContent: defaultContent,
-	      renderOption: defaultOption,
-	      renderHeader: noopFunc,
-	      renderFooter: noopFunc,
-	      onChange: noopFunc
+	      renderOptions: function renderOptions(options) {
+	        return options;
+	      },
+	      onChange: function onChange() {
+	        return null;
+	      }
+	    },
+	    enumerable: true
+	  }, {
+	    key: 'childContextTypes',
+	    value: {
+	      onOptionSelect: _react.PropTypes.func,
+	      isOpen: _react.PropTypes.bool
 	    },
 	    enumerable: true
 	  }]);
 
-	  return Selectly;
+	  return Select;
 	})(_react.Component);
 
-	exports['default'] = Selectly;
+	exports['default'] = Select;
 	module.exports = exports['default'];
 
 /***/ },
-/* 2 */
+/* 5 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_5__;
 
 /***/ },
-/* 3 */
+/* 6 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_6__;
 
 /***/ },
-/* 4 */
+/* 7 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_7__;
+
+/***/ },
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -557,7 +435,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    _classCallCheck(this, EventsHandler);
 
-	    this._documentClickHandler = function (e) {
+	    this._documentMouseDownHandler = function (e) {
 	      for (var i = _this._queue.length; i--;) {
 	        _this._queue[i]._toggleOpen(e);
 	      }
@@ -585,14 +463,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(EventsHandler, [{
 	    key: 'create',
 	    value: function create() {
-	      document.addEventListener('click', this._documentClickHandler);
+	      document.addEventListener('mousedown', this._documentMouseDownHandler);
 	      window.addEventListener('resize', this._resizeHandler);
 	    }
 	  }, {
 	    key: 'destroy',
 	    value: function destroy() {
 	      this._queue = [];
-	      document.removeEventListener('click', this._documentClickHandler);
+	      document.removeEventListener('mousedown', this._documentMouseDownHandler);
 	      window.removeEventListener('resize', this._resizeHandler);
 	    }
 	  }, {
@@ -614,6 +492,121 @@ return /******/ (function(modules) { // webpackBootstrap
 	})();
 
 	exports['default'] = EventsHandler;
+	module.exports = exports['default'];
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports['default'] = childrenPropType;
+
+	var _react = __webpack_require__(5);
+
+	function childrenPropType(_ref, propName, componentName) {
+	  var children = _ref.children;
+
+	  if (_react.Children.count(children) <= 1) {
+	    return new Error(componentName + ' requires two children, the first child as the trigger and the second child as the set of options.');
+	  }
+	}
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(5);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var Option = (function (_Component) {
+	  _inherits(Option, _Component);
+
+	  function Option() {
+	    _classCallCheck(this, Option);
+
+	    _get(Object.getPrototypeOf(Option.prototype), 'constructor', this).apply(this, arguments);
+	  }
+
+	  _createClass(Option, [{
+	    key: '_handleMouseUp',
+	    value: function _handleMouseUp() {
+	      var onMouseUp = this.props.onMouseUp;
+
+	      this.context.onOptionSelect(this.props.value);
+
+	      if (typeof onMouseUp === 'function') {
+	        onMouseUp();
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this = this;
+
+	      var _props = this.props;
+	      var component = _props.component;
+	      var children = _props.children;
+
+	      var props = _objectWithoutProperties(_props, ['component', 'children']);
+
+	      return (0, _react.createElement)(component, _extends({}, props, {
+	        onMouseUp: function onMouseUp() {
+	          return _this._handleMouseUp();
+	        }
+	      }), children);
+	    }
+	  }], [{
+	    key: 'propTypes',
+	    value: {
+	      component: _react.PropTypes.string,
+	      value: _react.PropTypes.any.isRequired
+	    },
+	    enumerable: true
+	  }, {
+	    key: 'defaultProps',
+	    value: {
+	      component: 'li'
+	    },
+	    enumerable: true
+	  }, {
+	    key: 'contextTypes',
+	    value: {
+	      onOptionSelect: _react.PropTypes.func
+	    },
+	    enumerable: true
+	  }]);
+
+	  return Option;
+	})(_react.Component);
+
+	exports['default'] = Option;
 	module.exports = exports['default'];
 
 /***/ }

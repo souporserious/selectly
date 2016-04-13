@@ -1,6 +1,6 @@
 {
   "name": "selectly",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Build custom, accessible, select menus for React.",
   "main": "lib/index.js",
   "scripts": {
@@ -19,8 +19,13 @@
   "keywords": [
     "react",
     "component",
+    "react-component",
     "select",
-    "combobox"
+    "multiselect",
+    "combobox",
+    "form",
+    "input",
+    "ui"
   ],
   "author": "Travis Arnold <travis@souporserious.com> (http://souporserious.com)",
   "license": "MIT",

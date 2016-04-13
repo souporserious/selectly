@@ -1,6 +1,6 @@
 {
   "name": "selectly",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "homepage": "https://github.com/souporserious/selectly",
   "authors": [
     "Travis Arnold <ftntravis@gmail.com>"
@@ -10,8 +10,13 @@
   "keywords": [
     "react",
     "component",
+    "react-component",
     "select",
-    "combobox"
+    "multiselect",
+    "combobox",
+    "form",
+    "input",
+    "ui"
   ],
   "license": "MIT",
   "ignore": [
