@@ -1,4 +1,4 @@
-## Selectly 0.1.2
+## Selectly
 
 Build custom, accessible, select menus in React. Provides a low level way to build the select menu you need.
 
@@ -11,50 +11,73 @@ Build custom, accessible, select menus in React. Provides a low level way to bui
 ## Example Usage
 
 ```javascript
-import Selectly from 'selectly';
+import { Select, Option, utils } from 'Selectly'
 
-class App extends Component {
+class SimpleSelect extends Component {
   state = {
-    currentValue: null,
-    options: {[
-      { label: 'Dogs', optgroup: [
-        { value: 'beagle', label: 'Beagle' },
-        { value: 'boxer', label: 'Boxer' },
-        { value: 'frenchy', label: 'French Bulldog' },
-        { value: 'pit-bull', label: 'Pit Bull' }
-      ]},
-      { label: 'Cats', optgroup: [
-        { value: 'bengal', label: 'Bengal' },
-        { value: 'egyptian', label: 'Egyptian' },
-        { value: 'munchkin', label: 'Munchkin' },
-        { value: 'persian', label: 'Persian' }
-      ]}
-    ]}
-  }
-
-  _handleChange = (currentValue) => {
-    this.setState({currentValue})
+    currentValue: 'Select A Color'
   }
 
   render() {
-    const { currentValue, options } = this.state
-
-    return(
-      <Selectly
-        name="selectly"
-        value={currentValue}
-        options={options}
-        onChange={this._handleChange}
-        renderTrigger={}
-        renderHeader={}
-        renderOptions={}
-        renderOption={}
-        renderFooter={}
-      />
+    return (
+      <Select onChange={value => this.setState({ currentValue: value })}>
+        <button>
+          {this.state.currentValue}
+        </button>
+        <ul>
+          <Option value="red">Red</Option>
+          <Option value="green">Green</Option>
+          <Option value="blue">Blue</Option>
+        </ul>
+      </Select>
     )
   }
 }
 ```
+
+## Select Props
+
+### `children`: PropTypes.node.isRequired (Accepts 2 children)
+
+The first child is used as the `trigger` and the second child is used as the `options` that will be displayed upon clicking the trigger.
+
+### `multiple`: PropTypes.bool
+
+When `true` this allows multiple options to be selected.
+
+### `disabled`: PropTypes.bool
+
+Puts the select menu in a disabled state.
+
+### `offset`: PropTypes.string
+
+The amount the `options` are offset from the `trigger`.
+
+### `classPrefix`: PropTypes.string
+
+Defaults to `selectly`.
+
+### `autoWidth`: PropTypes.bool
+
+Determines if the `options` should be the same width as the `trigger`.
+
+### `renderOptions`: PropTypes.func
+
+Prop function that passes in the options to be rendered. Allows the use of a custom animation using something like `CSSTranstionGroup`.
+
+### `onChange`: PropTypes.func
+
+Callback when an option has been selected. Passes back the value that was selected.
+
+## Option Props
+
+### `component`: PropTypes.string
+
+What element is used to display an option. Defaults to `li`.
+
+### `value`: PropTypes.any.isRequired
+
+A value of any kind is required for each option. This is what gets passed to the `onChange` callback in the `Select` component.
 
 ## Run Example
 
