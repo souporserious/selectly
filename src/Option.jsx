@@ -15,9 +15,9 @@ class Option extends Component {
   }
 
   _handleMouseUp() {
-    const { onMouseUp } = this.props
+    const { onMouseUp, value } = this.props
 
-    this.context.onOptionSelect(this.props.value)
+    this.context.onOptionSelect(value)
 
     if (typeof onMouseUp === 'function') {
       onMouseUp()
@@ -25,7 +25,7 @@ class Option extends Component {
   }
 
   render() {
-    const { component, children, ...props } = this.props
+    const { component, children, value, ...props } = this.props
 
     return createElement(
       component, {
