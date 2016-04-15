@@ -195,8 +195,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
@@ -334,7 +332,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	          constraints: [{
 	            to: 'window',
 	            attachment: 'together'
-	          }]
+	          }],
+	          style: {
+	            width: width ? width + 'px' : ''
+	          }
 	        },
 	        (0, _react.cloneElement)(firstChild, {
 	          ref: function ref(c) {
@@ -344,10 +345,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        renderOptions(isOpen && (0, _react.cloneElement)(secondChild, {
 	          ref: function ref(c) {
 	            _this2._options = (0, _reactDom.findDOMNode)(c);
-	          },
-	          style: _extends({
-	            width: width || ''
-	          }, secondChild.props.style)
+	          }
 	        }))
 	      );
 	    }
@@ -557,9 +555,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Option, [{
 	    key: '_handleMouseUp',
 	    value: function _handleMouseUp() {
-	      var onMouseUp = this.props.onMouseUp;
+	      var _props = this.props;
+	      var onMouseUp = _props.onMouseUp;
+	      var value = _props.value;
 
-	      this.context.onOptionSelect(this.props.value);
+	      this.context.onOptionSelect(value);
 
 	      if (typeof onMouseUp === 'function') {
 	        onMouseUp();
@@ -570,11 +570,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function render() {
 	      var _this = this;
 
-	      var _props = this.props;
-	      var component = _props.component;
-	      var children = _props.children;
+	      var _props2 = this.props;
+	      var component = _props2.component;
+	      var children = _props2.children;
+	      var value = _props2.value;
 
-	      var props = _objectWithoutProperties(_props, ['component', 'children']);
+	      var props = _objectWithoutProperties(_props2, ['component', 'children', 'value']);
 
 	      return (0, _react.createElement)(component, _extends({}, props, {
 	        onMouseUp: function onMouseUp() {

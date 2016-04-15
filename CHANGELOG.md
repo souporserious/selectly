@@ -1,4 +1,9 @@
 ## CHANGELOG
+### 0.3.0
+Updated to React Tether 0.5.1
+
+Auto width is now applied to the React Tether component
+
 ### 0.2.0
 Complete rebuild using context that provides a `Select` and `Option` components to build custom select menus.
 
