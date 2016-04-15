@@ -109,21 +109,18 @@ class Select extends Component {
           to: 'window',
           attachment: 'together'
         }]}
+        style={{
+          width: width ? width + 'px' : ''
+        }}
       >
-        {
-          cloneElement(firstChild, {
+        { cloneElement(firstChild, {
             ref: c => { this._trigger = findDOMNode(c) }
           })
         }
-        {
-          renderOptions(
+        { renderOptions(
             isOpen &&
             cloneElement(secondChild, {
-              ref: c => { this._options = findDOMNode(c) },
-              style: {
-                width: width || '',
-                ...secondChild.props.style
-              }
+              ref: c => { this._options = findDOMNode(c) }
             })
           )
         }
