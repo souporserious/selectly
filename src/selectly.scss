@@ -5,30 +5,6 @@
   position: relative;
 }
 
-.react-select-element {
-  max-height: 180px;
-  padding: 3px 0;
-  margin: 0;
-  border: 1px solid #e1e1e1;
-  border-radius: 0 0 2px 2px;
-  box-shadow: 0 2px 4px 0 rgba(218, 221, 222, 0.35);
-  background-color: white;
-  list-style: none;
-  overflow-x: hidden;
-  overflow-y: auto;
-  pointer-events: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.react-select-element-attached-bottom {
-  border-radius: 2px 2px 0 0;
-  box-shadow: 0 -2px -4px 0 rgba(218, 221, 222, 0.35);
-}
-
-.react-select-enabled {
-  pointer-events: auto;
-}
-
 .react-select-trigger {
   box-sizing: border-box;
   display: flex;
@@ -37,15 +13,27 @@
   padding: 6px 27px 6px 6px;
   font-size: 14px;
   text-align: left;
+  border-radius: 3px;
   border: 1px solid #d3d4d4;
   background: white;
   outline: 0;
   cursor: pointer;
   position: relative;
+
   &, &:active {
     color: black;
   }
-  * { // truncate children with ellipsis
+
+  &.react-select-target-attached-top {
+    border-radius: 0 0 3px 3px;
+  }
+
+  &.react-select-target-attached-bottom {
+    border-radius: 3px 3px 0 0;
+  }
+
+  // truncate children with ellipsis
+  * {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -78,6 +66,40 @@
   transform: translateY(-50%);
 }
 
+.react-select-menu {
+
+}
+
+.react-select-header {
+  display: flex;
+}
+
+.react-select-btn {
+  flex: 1;
+}
+
+.react-select-menu {
+  max-height: 180px;
+  padding: 3px 0;
+  border: 1px solid #e1e1e1;
+  border-radius: 0 0 3px 3px;
+  box-shadow: 0 2px 4px 0 rgba(218, 221, 222, 0.35);
+  background-color: white;
+  overflow-x: hidden;
+  overflow-y: auto;
+  pointer-events: none;
+  -webkit-tap-highlight-color: transparent;
+
+  .react-select-enabled & {
+    pointer-events: auto;
+  }
+
+  .react-select-element-attached-bottom  & {
+    border-radius: 3px 3px 0 0;
+    box-shadow: 0 -2px 4px 0 rgba(218, 221, 222, 0.35);
+  }
+}
+
 .react-select-options {
   padding: 0;
   margin: 0;
@@ -86,7 +108,7 @@
 
 .react-select-option {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
   padding: 4px 8px;
   font-size: 14px;
   text-indent: 4px;

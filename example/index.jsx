@@ -6,7 +6,7 @@ import { Select, Option, utils } from '../src/selectly.js'
 import '../src/selectly.scss'
 import './main.scss'
 
-const { buildLookup, getOption, multipleOptions } = utils
+const { getCurrentOptions, getToggledOptions, isOptionSelected } = utils
 
 // TODO:
 // recreate these:
@@ -19,13 +19,24 @@ class Trigger extends Component {
     isOpen: PropTypes.bool
   }
 
+  _renderLabel(label) {
+    return (
+      <span
+        key={label}
+        className="react-select-trigger__option"
+      >
+        {label}
+      </span>
+    )
+  }
+
   render() {
-    let { currentOptions, isDisabled } = this.props
-    const isMultiple = (currentOptions.constructor === Array)
+    let { currentValue, emptyValue, isDisabled } = this.props
+    const isMultiple = (currentValue.constructor === Array)
     const isActive = this.context.isOpen
 
     if (!isMultiple) {
-      currentOptions = [currentOptions]
+      currentValue = [currentValue]
     }
 
     return (
@@ -38,14 +49,10 @@ class Trigger extends Component {
           (isDisabled ? ' react-select-trigger--disabled' : '')
         }
       >
-        {currentOptions.map(currentOption =>
-          <span
-            key={currentOption.label}
-            className="react-select-trigger__option"
-          >
-            {currentOption.label}
-          </span>
-        )}
+        { currentValue.length > 0
+            ? currentValue.map(({ label }) => this._renderLabel(label))
+            : emptyValue
+        }
         <svg
           width="21px"
           height="21px"
@@ -60,17 +67,46 @@ class Trigger extends Component {
 }
 
 class MySelect extends Component {
-  defaultProps = {
-    multiple: false
+  static propTypes = {
+    emptyValue:  PropTypes.any,
+    value:       PropTypes.any,
+    options:     PropTypes.array,
+    checkbox:    PropTypes.bool,
+    multiple:    PropTypes.bool,
+    selectAll:   PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+    deselectAll: PropTypes.oneOfType([PropTypes.func, PropTypes.bool])
+  }
+
+  static defaultProps = {
+    emptyValue:  '',
+    checkbox:    false,
+    multiple:    false,
+    selectAll:   false,
+    deselectAll: false
   }
 
   _renderOption({ value, label }) {
+    const hasCheckbox = this.props.checkbox
+    const isSelected = isOptionSelected(this.props.value, value)
+
     return (
       <Option
         key={label}
         value={value}
-        className="react-select-option"
+        className={
+          'react-select-option' +
+          (hasCheckbox ? ' has-checkbox' : '') +
+          (isSelected ? ' is-selected' : '')
+        }
       >
+        { hasCheckbox &&
+          <input
+            type="checkbox"
+            className="react-select-option__checkbox"
+            checked={isSelected}
+            readOnly
+          />
+        }
         {label}
       </Option>
     )
@@ -93,18 +129,45 @@ class MySelect extends Component {
   _renderOptions(options) {
     return (
       <ul className="react-select-options">
-        {options.map(option =>
-          option.optgroup ?
-          this._renderOptGroup(option) :
-          this._renderOption(option)
-        )}
+        { options.map(option => (
+            option.optgroup
+              ? this._renderOptGroup(option)
+              : this._renderOption(option)
+          ))
+        }
       </ul>
     )
   }
 
+  _renderSelectAll() {
+    const { selectAll, deselectAll } = this.props
+    return (
+      <header className="react-select-header">
+        { selectAll &&
+          <button
+            type="button"
+            className="react-select-btn"
+            onClick={() => selectAll()}
+          >
+            Select All
+          </button>
+        }
+        { deselectAll &&
+          <button
+            type="button"
+            className="react-select-btn"
+            onClick={() => deselectAll()}
+          >
+            Deselect All
+          </button>
+        }
+      </header>
+    )
+  }
+
   render() {
-    const { value, options, multiple, onChange } = this.props
-    const currentOption = getOption(value, options)
+    const { value, emptyValue, options, multiple, onChange, selectAll, deselectAll } = this.props
+    const currentOptions = getCurrentOptions(options, value)
 
     return (
       <Select
@@ -113,8 +176,16 @@ class MySelect extends Component {
         multiple={multiple}
         onChange={onChange}
       >
-        <Trigger currentOptions={currentOption} />
-        {this._renderOptions(options)}
+        <Trigger
+          emptyValue={emptyValue}
+          currentValue={currentOptions}
+        />
+        <div className="react-select-menu">
+          { (selectAll || deselectAll) &&
+            this._renderSelectAll()
+          }
+          {this._renderOptions(options)}
+        </div>
       </Select>
     )
   }
@@ -146,11 +217,14 @@ class Demo1 extends Component {
   render() {
     const { currentValue, options } = this.state
     return (
-      <MySelect
-        value={currentValue}
-        options={options}
-        onChange={this._handleChange}
-      />
+      <div>
+        <label>Choose an animal:</label>
+        <MySelect
+          value={currentValue}
+          options={options}
+          onChange={this._handleChange}
+        />
+      </div>
     )
   }
 }
@@ -168,87 +242,40 @@ class Demo2 extends Component {
 
   _handleChange = (value) => {
     this.setState({
-      currentValue: multipleOptions(this.state.currentValue, value)
+      currentValue: getToggledOptions(this.state.currentValue, value)
+    })
+  }
+
+  _handleSelectAll = () => {
+    const { options } = this.state
+    this.setState({
+      currentValue: Object.keys(options).map(key => options[key].value)
+    })
+  }
+
+  _handleDeselectAll = () => {
+    this.setState({
+      currentValue: []
     })
   }
 
   render() {
     const { currentValue, options } = this.state
+
     return (
-      <MySelect
-        value={currentValue}
-        options={options}
-        multiple
-        onChange={this._handleChange}
-      />
-    )
-  }
-}
-
-class Demo3 extends Component {
-  state = {
-    currentValue: ['the-shining', 'halloween'],
-    options: [
-      { value: 'the-shining', label: 'The Shining' },
-      { value: 'poltergeist', label: 'Poltergeist' },
-      { value: 'halloween', label: 'Halloween' },
-      { value: 'pumpkinhead', label: 'Pumpkinhead' }
-    ]
-  }
-
-  _handleChange = (option) => {
-    let currentValue = this.state.currentValue.slice(0)
-    let pos = currentValue.indexOf(option.value)
-    let value = null
-
-    if (pos > -1) {
-      currentValue.splice(pos, 1)
-    } else {
-      currentValue.push(option.value)
-    }
-
-    this.setState({currentValue})
-  }
-
-  _handleOption = ({value, label, onSelect}) => {
-    const isSelected = this.state.currentValue.indexOf(value) > -1
-    return (
-      <li
-        key={value}
-        className="react-select__option"
-        onClick={onSelect}
-      >
-        <div className="react-select__option__label">
-          {isSelected ? <span>✓</span> : <span>&nbsp;&nbsp;</span>} {label}
-        </div>
-      </li>
-    )
-  }
-
-  render() {
-    const { currentValue, options } = this.state
-    return (
-      <Selectly
-        name="selectly-3"
-        value={currentValue}
-        options={options}
-        multiple={true}
-        offset="1px 0px"
-        renderTrigger={(currentOptions, isActive) =>
-          <button
-            role="button"
-            style={{
-              border: 0,
-              color: isActive ? '#fff' : '',
-              background: isActive ? '#636363' : '#E2E2E2'
-            }}
-          >
-            Custom Trigger
-          </button>
-        }
-        renderOption={this._handleOption}
-        onChange={this._handleChange}
-      />
+      <div>
+        <label>What's your favorite scary movie:</label>
+        <MySelect
+          emptyValue="Select A Value"
+          value={currentValue}
+          options={options}
+          checkbox
+          multiple
+          selectAll={this._handleSelectAll}
+          deselectAll={this._handleDeselectAll}
+          onChange={this._handleChange}
+        />
+      </div>
     )
   }
 }
@@ -261,7 +288,7 @@ class MultiSelect extends Component {
 
   _handleChange = (value) => {
     this.setState({
-      currentValues: multipleOptions(this.state.currentValues, value)
+      currentValues: getToggledOptions(this.state.currentValues, value)
     })
   }
 
@@ -295,9 +322,6 @@ class App extends Component {
         <div style={{margin: '0 0 24px'}}>
           <Demo2/>
         </div>
-        {/*<div style={{margin: '0 0 24px'}}>
-          <Demo3/>
-        </div>*/}
         <MultiSelect/>
       </div>
     )
