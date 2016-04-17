@@ -1,4 +1,4 @@
-export default function multipleOptions(options, value) {
+export default function getToggledOptions(options, value) {
   const newOptions = [...options]
   const pos = newOptions.indexOf(value)
 

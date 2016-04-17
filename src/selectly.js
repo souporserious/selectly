@@ -2,10 +2,13 @@ export { default as Select } from './Select'
 export { default as Option } from './Option'
 
 import buildLookup from './utils/build-lookup'
-import getOption from './utils/get-option'
-import multipleOptions from './utils/multiple-options'
+import getCurrentOptions from './utils/get-current-options'
+import getToggledOptions from './utils/get-toggled-options'
+import isOptionSelected from './utils/is-option-selected'
+
 export const utils = {
   buildLookup,
-  getOption,
-  multipleOptions
+  getCurrentOptions,
+  getToggledOptions,
+  isOptionSelected
 }
