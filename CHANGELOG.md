@@ -1,4 +1,10 @@
 ## CHANGELOG
+### 0.4.0
+
+Cleaned up context to live under `selectly` namespace.
+
+Finished and documented utilities.
+
 ### 0.3.0
 Updated to React Tether 0.5.1
 
