@@ -1,6 +1,6 @@
 ## Selectly
 
-Build custom, accessible, select menus in React. Provides a low level way to build the select menu you need.
+Build custom select menus in React. Provides a low level way to build the select menu you need.
 
 ## Install
 
@@ -84,6 +84,8 @@ Prop function that passes in the options to be rendered. Allows the use of a cus
 
 Callback when an option has been selected. Passes back the value that was selected.
 
+<br/>
+
 ## Option Props
 
 ### `component`: PropTypes.string
@@ -94,9 +96,55 @@ What element is used to display an option. Defaults to `li`.
 
 A value of any kind is required for each option. This is what gets passed to the `onChange` callback in the `Select` component.
 
-### `anything`
+<br/>
 
-Any other valid React props are allowed as well like `className` for instance.
+## Utilities
+
+### `buildOptionsLookup`: (array options)
+
+Returns a flat object to allow optgroup options to be accessed easier.
+
+```javascript
+[
+  { label: 'Dogs', optgroup: [
+    { value: 'frenchy', label: 'French Bulldog' },
+    { value: 'pit-bull', label: 'Pit Bull' }
+  ]},
+  { label: 'Cats', optgroup: [
+    { value: 'munchkin', label: 'Munchkin' },
+    { value: 'persian', label: 'Persian' }
+  ]}
+]
+```
+
+turns into
+
+```javascript
+{
+  'frenchy':  { value: 'frenchy', label: 'French Bulldog' },
+  'pit-bull': { value: 'pit-bull', label: 'Pit Bull' },
+  'munchkin': { value: 'munchkin', label: 'Munchkin' },
+  'persian':  { value: 'persian', label: 'Persian' }
+}
+```
+
+### `getAllValues`: (object options)
+
+Returns an array of all option values.
+
+### `getCurrentOptions`: (object options, [array, string] currentValue)
+
+Returns an array of the current option or options.
+
+### `getToggledOptions`: (object options, [array, string] values)
+
+Returns a new array of options with the passed in values either added or removed.
+
+### `isOptionSelected`: ([array, string] currentValue, string value)
+
+Determines if `value` exists in or matches `currentValue`. Returns `true` or `false`.
+
+<br/>
 
 ## Run Example
 
