@@ -31,13 +31,8 @@ class Trigger extends Component {
   }
 
   render() {
-    let { currentValue, emptyValue, isDisabled } = this.props
-    const isMultiple = (currentValue.constructor === Array)
+    let { currentValue, emptyValue, isMultiple, isDisabled } = this.props
     const isActive = this.context.isOpen
-
-    if (!isMultiple) {
-      currentValue = [currentValue]
-    }
 
     return (
       <button
@@ -164,7 +159,7 @@ class MySelect extends Component {
   render() {
     const { value, emptyValue, options, multiple, onChange, selectAll, deselectAll } = this.props
     const currentOptions = getCurrentOptions(options, value)
-
+console.log(currentOptions)
     return (
       <Select
         ref="select"
@@ -174,6 +169,7 @@ class MySelect extends Component {
       >
         <Trigger
           emptyValue={emptyValue}
+          isMultiple={multiple}
           currentValue={currentOptions}
         />
         <div className="react-select-menu">
