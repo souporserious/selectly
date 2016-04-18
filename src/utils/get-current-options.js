@@ -1,7 +1,7 @@
-import buildLookup from './build-lookup'
+import buildOptionsLookup from './build-options-lookup'
 
 export default function getOption(options, value) {
-  const lookup = buildLookup(options)
+  const lookup = buildOptionsLookup(options)
 
   // if no value provided return the first option
   if (!value) {
