@@ -7,7 +7,7 @@
 		exports["Selectly"] = factory(require("React"), require("ReactDOM"), require("TetherComponent"));
 	else
 		root["Selectly"] = factory(root["React"], root["ReactDOM"], root["TetherComponent"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_7__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_7__, __WEBPACK_EXTERNAL_MODULE_8__, __WEBPACK_EXTERNAL_MODULE_9__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -64,29 +64,39 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _utilsBuildLookup = __webpack_require__(1);
+	var _utilsBuildOptionsLookup = __webpack_require__(1);
 
-	var _utilsBuildLookup2 = _interopRequireDefault(_utilsBuildLookup);
+	var _utilsBuildOptionsLookup2 = _interopRequireDefault(_utilsBuildOptionsLookup);
 
-	var _utilsGetOption = __webpack_require__(2);
+	var _utilsGetCurrentOptions = __webpack_require__(2);
 
-	var _utilsGetOption2 = _interopRequireDefault(_utilsGetOption);
+	var _utilsGetCurrentOptions2 = _interopRequireDefault(_utilsGetCurrentOptions);
 
-	var _utilsMultipleOptions = __webpack_require__(3);
+	var _utilsGetToggledOptions = __webpack_require__(3);
 
-	var _utilsMultipleOptions2 = _interopRequireDefault(_utilsMultipleOptions);
+	var _utilsGetToggledOptions2 = _interopRequireDefault(_utilsGetToggledOptions);
 
-	var _Select = __webpack_require__(4);
+	var _utilsGetAllValues = __webpack_require__(4);
+
+	var _utilsGetAllValues2 = _interopRequireDefault(_utilsGetAllValues);
+
+	var _utilsIsOptionSelected = __webpack_require__(5);
+
+	var _utilsIsOptionSelected2 = _interopRequireDefault(_utilsIsOptionSelected);
+
+	var _Select = __webpack_require__(6);
 
 	exports.Select = _interopRequire(_Select);
 
-	var _Option = __webpack_require__(10);
+	var _Option = __webpack_require__(12);
 
 	exports.Option = _interopRequire(_Option);
 	var utils = {
-	  buildLookup: _utilsBuildLookup2['default'],
-	  getOption: _utilsGetOption2['default'],
-	  multipleOptions: _utilsMultipleOptions2['default']
+	  buildOptionsLookup: _utilsBuildOptionsLookup2['default'],
+	  getCurrentOptions: _utilsGetCurrentOptions2['default'],
+	  getToggledOptions: _utilsGetToggledOptions2['default'],
+	  getAllValues: _utilsGetAllValues2['default'],
+	  isOptionSelected: _utilsIsOptionSelected2['default']
 	};
 	exports.utils = utils;
 
@@ -99,9 +109,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports["default"] = buildLookup;
+	exports["default"] = buildOptionsLookup;
 
-	function buildLookup(options) {
+	function buildOptionsLookup(options) {
 	  var _lookup = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
 	  for (var i = 0, len = options.length; i < len; i++) {
@@ -111,7 +121,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var label = option.label;
 
 	    if (optgroup) {
-	      buildLookup(optgroup, _lookup);
+	      buildOptionsLookup(optgroup, _lookup);
 	    } else {
 	      _lookup[value] = options[i];
 	    }
@@ -130,28 +140,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	exports['default'] = getOption;
+	exports['default'] = getCurrentOptions;
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _buildLookup = __webpack_require__(1);
+	var _buildOptionsLookup = __webpack_require__(1);
 
-	var _buildLookup2 = _interopRequireDefault(_buildLookup);
+	var _buildOptionsLookup2 = _interopRequireDefault(_buildOptionsLookup);
 
-	function getOption(value, options) {
-	  var lookup = (0, _buildLookup2['default'])(options);
+	function getCurrentOptions(options, currentValue) {
+	  var lookup = (0, _buildOptionsLookup2['default'])(options);
 
 	  // if no value provided return the first option
-	  if (!value) {
-	    return lookup[Object.keys(lookup)[0]];
+	  if (!currentValue) {
+	    return new Array(lookup[Object.keys(lookup)[0]]);
 	    // if an array we return an array of the selected options back
-	  } else if (value.constructor === Array) {
-	      return value.map(function (_value) {
+	  } else if (currentValue.constructor === Array) {
+	      return currentValue.map(function (_value) {
 	        return lookup[_value];
 	      });
 	      // otherwise just return the single selected option
 	    } else {
-	        return lookup[value];
+	        return new Array(lookup[currentValue]);
 	      }
 	}
 
@@ -166,19 +176,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports["default"] = multipleOptions;
+	exports["default"] = getToggledOptions;
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
 
-	function multipleOptions(options, value) {
+	function getToggledOptions(options, values) {
 	  var newOptions = [].concat(_toConsumableArray(options));
-	  var pos = newOptions.indexOf(value);
 
-	  if (pos > -1) {
-	    newOptions.splice(pos, 1);
-	  } else {
-	    newOptions.push(value);
+	  if (values.constructor !== Array) {
+	    values = [values];
 	  }
+
+	  values.forEach(function (value) {
+	    var pos = newOptions.indexOf(value);
+
+	    if (pos > -1) {
+	      newOptions.splice(pos, 1);
+	    } else {
+	      newOptions.push(value);
+	    }
+	  });
 
 	  return newOptions;
 	}
@@ -187,6 +204,57 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports['default'] = getAllValues;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _buildOptionsLookup = __webpack_require__(1);
+
+	var _buildOptionsLookup2 = _interopRequireDefault(_buildOptionsLookup);
+
+	function getAllValues(options) {
+	  var lookup = (0, _buildOptionsLookup2['default'])(options);
+	  return Object.keys(lookup).map(function (key) {
+	    return lookup[key].value;
+	  });
+	}
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports["default"] = isOptionSelected;
+
+	function isOptionSelected(currentValue, value) {
+	  if (!value || !currentValue) {
+	    return false;
+	  } else {
+	    if (currentValue.constructor === Array) {
+	      return currentValue.indexOf(value) > -1;
+	    } else {
+	      return value === currentValue;
+	    }
+	  }
+	}
+
+	module.exports = exports["default"];
+
+/***/ },
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -205,23 +273,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _react = __webpack_require__(5);
+	var _react = __webpack_require__(7);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactDom = __webpack_require__(6);
+	var _reactDom = __webpack_require__(8);
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _reactTether = __webpack_require__(7);
+	var _reactTether = __webpack_require__(9);
 
 	var _reactTether2 = _interopRequireDefault(_reactTether);
 
-	var _EventsHandler = __webpack_require__(8);
+	var _EventsHandler = __webpack_require__(10);
 
 	var _EventsHandler2 = _interopRequireDefault(_EventsHandler);
 
-	var _childrenPropType = __webpack_require__(9);
+	var _childrenPropType = __webpack_require__(11);
 
 	var _childrenPropType2 = _interopRequireDefault(_childrenPropType);
 
@@ -396,18 +464,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_5__;
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_6__;
-
-/***/ },
 /* 7 */
 /***/ function(module, exports) {
 
@@ -415,6 +471,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 8 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_8__;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_9__;
+
+/***/ },
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -493,7 +561,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 9 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -503,7 +571,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports['default'] = childrenPropType;
 
-	var _react = __webpack_require__(5);
+	var _react = __webpack_require__(7);
 
 	function childrenPropType(_ref, propName, componentName) {
 	  var children = _ref.children;
@@ -516,7 +584,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -539,7 +607,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _react = __webpack_require__(5);
+	var _react = __webpack_require__(7);
 
 	var _react2 = _interopRequireDefault(_react);
 

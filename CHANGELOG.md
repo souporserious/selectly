@@ -1,9 +1,15 @@
 ## CHANGELOG
 ### 0.4.0
 
-Cleaned up context to live under `selectly` namespace.
-
 Finished and documented utilities.
+
+Renamed utilities:
+
+`build-lookup` -> `build-options-lookup`
+
+`get-option` -> `get-current-options`
+
+`multiple-options` -> `get-toggled-options`
 
 ### 0.3.0
 Updated to React Tether 0.5.1
