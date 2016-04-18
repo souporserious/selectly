@@ -84,6 +84,16 @@ Prop function that passes in the options to be rendered. Allows the use of a cus
 
 Callback when an option has been selected. Passes back the value that was selected.
 
+## Select Context
+
+### `onOptionSelect`: PropTypes.func
+
+Callback used to pass an option value to the `onChange` prop of the `Select` component.
+
+### `isOpen`: PropTypes.bool
+
+Returns the open state of the `Select` component.
+
 <br/>
 
 ## Option Props
