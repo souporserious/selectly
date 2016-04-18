@@ -159,7 +159,7 @@ class MySelect extends Component {
   render() {
     const { value, emptyValue, options, multiple, onChange, selectAll, deselectAll } = this.props
     const currentOptions = getCurrentOptions(options, value)
-console.log(currentOptions)
+
     return (
       <Select
         ref="select"
