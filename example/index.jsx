@@ -6,7 +6,7 @@ import { Select, Option, utils } from '../src/selectly.js'
 import '../src/selectly.scss'
 import './main.scss'
 
-const { getCurrentOptions, getToggledOptions, isOptionSelected } = utils
+const { getCurrentOptions, getToggledOptions, getAllValues, isOptionSelected } = utils
 
 // TODO:
 // recreate these:
@@ -50,17 +50,9 @@ class Trigger extends Component {
         }
       >
         { currentValue.length > 0
-            ? currentValue.map(({ label }) => this._renderLabel(label))
-            : emptyValue
+          ? currentValue.map(({ label }) => this._renderLabel(label))
+          : emptyValue
         }
-        <svg
-          width="21px"
-          height="21px"
-          viewBox="0 0 21 21"
-          className="react-select-trigger__arrow"
-        >
-          <polygon points="10.5,12 7,8.5 14,8.5"/>
-        </svg>
       </button>
     )
   }
@@ -83,6 +75,10 @@ class MySelect extends Component {
     multiple:    false,
     selectAll:   false,
     deselectAll: false
+  }
+
+  setOpen(isOpen) {
+    this.refs.select.setOpen(isOpen)
   }
 
   _renderOption({ value, label }) {
@@ -131,8 +127,8 @@ class MySelect extends Component {
       <ul className="react-select-options">
         { options.map(option => (
             option.optgroup
-              ? this._renderOptGroup(option)
-              : this._renderOption(option)
+            ? this._renderOptGroup(option)
+            : this._renderOption(option)
           ))
         }
       </ul>
@@ -210,6 +206,10 @@ class Demo1 extends Component {
     ]
   }
 
+  _openSelectMenu = () => {
+    this.refs.select.setOpen(true)
+  }
+
   _handleChange = (value) => {
     this.setState({currentValue: value})
   }
@@ -218,8 +218,11 @@ class Demo1 extends Component {
     const { currentValue, options } = this.state
     return (
       <div>
-        <label>Choose an animal:</label>
+        <label onClick={this._openSelectMenu}>
+          Choose an animal:
+        </label>
         <MySelect
+          ref="select"
           value={currentValue}
           options={options}
           onChange={this._handleChange}
@@ -230,13 +233,31 @@ class Demo1 extends Component {
 }
 
 class Demo2 extends Component {
+  // state = {
+  //   currentValue: ['the-shining', 'halloween'],
+  //   options: [
+  //     { value: 'the-shining', label: 'The Shining' },
+  //     { value: 'poltergeist', label: 'Poltergeist' },
+  //     { value: 'halloween', label: 'Halloween' },
+  //     { value: 'pumpkinhead', label: 'Pumpkinhead' }
+  //   ]
+  // }
+
   state = {
-    currentValue: ['the-shining', 'halloween'],
+    currentValue: [],
     options: [
-      { value: 'the-shining', label: 'The Shining' },
-      { value: 'poltergeist', label: 'Poltergeist' },
-      { value: 'halloween', label: 'Halloween' },
-      { value: 'pumpkinhead', label: 'Pumpkinhead' }
+      { label: 'Dogs', optgroup: [
+        { value: 'beagle', label: 'Beagle' },
+        { value: 'boxer', label: 'Boxer' },
+        { value: 'frenchy', label: 'French Bulldog' },
+        { value: 'pit-bull', label: 'Pit Bull' }
+      ]},
+      { label: 'Cats', optgroup: [
+        { value: 'bengal', label: 'Bengal' },
+        { value: 'egyptian', label: 'Egyptian' },
+        { value: 'munchkin', label: 'Munchkin' },
+        { value: 'persian', label: 'Persian' }
+      ]}
     ]
   }
 
@@ -247,9 +268,8 @@ class Demo2 extends Component {
   }
 
   _handleSelectAll = () => {
-    const { options } = this.state
     this.setState({
-      currentValue: Object.keys(options).map(key => options[key].value)
+      currentValue: getAllValues(this.state.options)
     })
   }
 
@@ -298,7 +318,7 @@ class MultiSelect extends Component {
       <Select multiple onChange={this._handleChange}>
         <button>
           { currentValues.length > 0
-            ? currentValues
+            ? currentValues.join(', ')
             : defaultValue
           }
         </button>

@@ -15,13 +15,21 @@
   text-align: left;
   border-radius: 3px;
   border: 1px solid #d3d4d4;
-  background: white;
   outline: 0;
   cursor: pointer;
   position: relative;
+  background: {
+    color: #fff;
+    image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="21px" height="21px" viewBox="0 0 21 21"><polygon points="10.5,12 7,8.5 14,8.5"/></svg>');
+    repeat: no-repeat;
+    position: calc(100% - 5px) center;
+  }
 
   &, &:active {
     color: black;
+  }
+
+  &.react-select-enabled {
   }
 
   &.react-select-target-attached-top {
@@ -38,11 +46,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-}
-
-.react-select-trigger:active,
-.react-select-trigger--active {
-  border-color: #E6F9FF;
 }
 
 .react-select-trigger__option {
@@ -67,18 +70,6 @@
 }
 
 .react-select-menu {
-
-}
-
-.react-select-header {
-  display: flex;
-}
-
-.react-select-btn {
-  flex: 1;
-}
-
-.react-select-menu {
   max-height: 180px;
   padding: 3px 0;
   border: 1px solid #e1e1e1;
@@ -94,10 +85,28 @@
     pointer-events: auto;
   }
 
+  .react-select-element-attached-top  & {
+    margin-top: -1px;
+    border-top: 0;
+  }
+
   .react-select-element-attached-bottom  & {
+    margin-top: 1px;
+    border-bottom: 0;
     border-radius: 3px 3px 0 0;
     box-shadow: 0 -2px 4px 0 rgba(218, 221, 222, 0.35);
   }
+}
+
+.react-select-header {
+  display: flex;
+  padding: 8px;
+  border-bottom: 1px solid #F1F3F5;
+  border-top: 1px solid #F1F3F5;
+}
+
+.react-select-btn {
+  flex: 1;
 }
 
 .react-select-options {
@@ -115,8 +124,9 @@
   border-radius: 2px;
   cursor: pointer;
   user-select: none;
+
   &:hover {
-    background: #DFF5FF;
+    background: #FBFBFB;
   }
 }
 
@@ -131,15 +141,20 @@
   display: block;
   padding: 3px 0;
   cursor: default;
-  &:hover {
-    background: transparent;
+  border-top: 1px solid #F1F3F5;
+
+  &:first-child {
+    border: 0;
   }
 }
 
 .react-select-optgroup__title {
   display: block;
-  padding: 0 12px 4px;
+  padding: 8px 12px 6px;
+  font-size: 14px;
   font-weight: 700;
-  color: #353638;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #909294;
   user-select: none;
 }
