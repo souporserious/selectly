@@ -25,8 +25,8 @@ class Option extends Component {
   }
 
   render() {
-    const { component, children, value, ...props } = this.props
-
+    const { component, children, value, index, ...props } = this.props
+console.log(index)
     return createElement(
       component, {
         ...props,

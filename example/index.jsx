@@ -1,4 +1,4 @@
-import React, { Component, Children, PropTypes } from 'react'
+import React, { Component, Children, PropTypes, cloneElement } from 'react'
 import ReactDOM from 'react-dom'
 import { spring } from 'react-motion'
 import { Select, Option, utils } from '../src/selectly.js'
@@ -6,7 +6,7 @@ import { Select, Option, utils } from '../src/selectly.js'
 import '../src/selectly.scss'
 import './main.scss'
 
-const { getCurrentOptions, getToggledOptions, getAllValues, isOptionSelected } = utils
+const { buildOptionsLookup, getCurrentOptions, getToggledOptions, getAllValues, isOptionSelected } = utils
 
 // TODO:
 // recreate these:
@@ -35,8 +35,10 @@ class Trigger extends Component {
     const isActive = this.context.isOpen
 
     return (
-      <button
-        type="button"
+      <div
+        tabIndex="1"
+        onKeyDown={this.props.onKeyDown}
+
         className={
           'react-select-trigger' +
           (isMultiple ? ' react-select-trigger--multiple' : '') +
@@ -48,8 +50,37 @@ class Trigger extends Component {
           ? currentValue.map(({ label }) => this._renderLabel(label))
           : emptyValue
         }
-      </button>
+      </div>
     )
+  }
+}
+
+function interceptEvent(event) {
+  if (event) {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+}
+
+class SelectTrigger extends Component {
+  render() {
+    return this.props.children
+  }
+}
+
+class SelectOptions extends Component {
+  state = {
+    index: -1
+  }
+
+  componentDidMount() {
+    ReactDOM.findDOMNode(this).focus()
+  }
+
+  render() {
+    return cloneElement(this.props.children, {
+      index: this.state.index
+    })
   }
 }
 
@@ -70,6 +101,10 @@ class MySelect extends Component {
     multiple:    false,
     selectAll:   false,
     deselectAll: false
+  }
+
+  state = {
+    focusedIndex: -1
   }
 
   setOpen(isOpen) {
@@ -156,6 +191,26 @@ class MySelect extends Component {
     )
   }
 
+  _handleKeyDown = (e) => {
+    //interceptEvent(e)
+    if (!this.refs.select.isOpen) {
+      if (e.key === 'ArrowDown') {
+        this.setOpen(true)
+      }
+    } else {
+      if (e.key === 'ArrowDown') {
+        this.moveFocus(1)
+      }
+    }
+  }
+
+  moveFocus(amount) {
+    const len = Object.keys(buildOptionsLookup(this.props.options)).length
+    this.setState({
+      focusedIndex: (this.state.focusedIndex + amount + len) % len
+    })
+  }
+
   render() {
     const { value, emptyValue, options, multiple, onChange, selectAll, deselectAll } = this.props
     const currentOptions = getCurrentOptions(options, value)
@@ -167,17 +222,29 @@ class MySelect extends Component {
         multiple={multiple}
         onChange={onChange}
       >
-        <Trigger
-          emptyValue={emptyValue}
-          isMultiple={multiple}
-          currentValue={currentOptions}
-        />
-        <div className="react-select-menu">
-          { (selectAll || deselectAll) &&
-            this._renderSelectAll()
-          }
-          {this._renderOptions(options)}
-        </div>
+        <SelectTrigger>
+          <Trigger
+            onKeyDown={this._handleKeyDown}
+
+            emptyValue={emptyValue}
+            isMultiple={multiple}
+            currentValue={currentOptions}
+          />
+        </SelectTrigger>
+        <SelectOptions>
+          <div
+            ref="options"
+            tabIndex="2"
+            onKeyDown={this._handleKeyDown}
+
+            className="react-select-menu"
+          >
+            { (selectAll || deselectAll) &&
+              this._renderSelectAll()
+            }
+            {this._renderOptions(options)}
+          </div>
+        </SelectOptions>
       </Select>
     )
   }

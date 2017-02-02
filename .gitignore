@@ -1,3 +1,4 @@
+
 # Mac OSX Files
 .DS_Store
 .Trashes
@@ -5,10 +6,12 @@
 .AppleDouble
 .LSOverride
 
-# Bower & Node Modules
+# APP
 node_modules
 npm-debug.log
-bower_components
+/dist/
+/lib/
+/example/bundle.js
 
 # General Files
 .sass-cache

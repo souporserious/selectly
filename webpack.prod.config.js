@@ -1,48 +1,60 @@
 var path = require('path');
 var webpack = require('webpack');
+var banner = require('./webpack.banner');
 var TARGET = process.env.TARGET || null;
-var filename = 'selectly'
-var library = 'Selectly'
+
+var externals = {
+  'react': {
+    root: 'React',
+    commonjs2: 'react',
+    commonjs: 'react',
+    amd: 'react'
+  },
+  'react-dom': {
+    root: 'ReactDOM',
+    commonjs2: 'react-dom',
+    commonjs: 'react-dom',
+    amd: 'react-dom'
+  }
+};
 
 var config = {
   entry: {
-    index: './src/' + filename + '.js',
+    index: './src/selectly.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: 'dist/',
-    filename: filename + '.js',
-    sourceMapFilename: filename + '.sourcemap.js',
-    library: library,
+    filename: 'selectly.js',
+    sourceMapFilename: 'selectly.sourcemap.js',
+    library: 'Selectly',
     libraryTarget: 'umd'
   },
   module: {
     loaders: [
-      {test: /\.(js|jsx)/, loader: 'babel?stage=0'}
+      { test: /\.(js|jsx)/, loader: 'babel-loader' }
     ]
   },
-  plugins: [],
+  plugins: [
+    new webpack.BannerPlugin(banner)
+  ],
   resolve: {
     extensions: ['', '.js', '.jsx']
   },
-  externals: {
-    'react': 'React',
-    'react-dom': 'ReactDOM',
-    'react-tether': 'TetherComponent'
-  },
+  externals: externals
 };
 
-if(TARGET === 'minify') {
-  config.output.filename = filename + '.min.js';
-  config.output.sourceMapFilename = filename + '.sourcemap.min.js';
+if (TARGET === 'minify') {
+  config.output.filename = 'selectly.min.js';
+  config.output.sourceMapFilename = 'selectly.min.js';
   config.plugins.push(new webpack.optimize.UglifyJsPlugin({
     compress: {
       warnings: false
     },
     mangle: {
-      except: ['React', 'ReactDOM', library, 'TetherComponent']
+      except: ['React', 'ReactDOM']
     }
   }));
 }
 
-module.exports = config
+module.exports = config;

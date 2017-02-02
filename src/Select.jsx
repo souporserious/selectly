@@ -72,8 +72,12 @@ class Select extends Component {
     eventsHandler.remove(this)
   }
 
-  setOpen(isOpen) {
-    this.setState({isOpen})
+  setOpen(isOpen, cb = () => null) {
+    this.setState({ isOpen }, cb)
+  }
+
+  get isOpen() {
+    return this.state.isOpen
   }
 
   _setWidth() {
@@ -89,6 +93,28 @@ class Select extends Component {
       this.setOpen(!this.state.isOpen)
     } else if (this._options && !this._options.contains(target)) {
       this.setOpen(false)
+    }
+  }
+
+  _handleFocus = ({ key }) => {
+  }
+
+  _handleBlur = () => {
+    this.setOpen(false)
+  }
+
+  _handleKeyDown = ({ key }) => {
+    if (key === 'ArrowDown') {
+      this.setOpen(true)
+      this._options.focus()
+    }
+  }
+
+  _getKeyboardControls() {
+    return {
+      onFocus: this._handleFocus,
+      onBlur: this._handleBlur,
+      onKeyDown: this._handleKeyDown
     }
   }
 
@@ -114,7 +140,8 @@ class Select extends Component {
         }}
       >
         { cloneElement(firstChild, {
-            ref: c => { this._trigger = findDOMNode(c) }
+            ref: c => { this._trigger = findDOMNode(c) },
+            keyboardControls: this._getKeyboardControls()
           })
         }
         { renderOptions(
