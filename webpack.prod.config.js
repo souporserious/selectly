@@ -15,6 +15,30 @@ var externals = {
     commonjs2: 'react-dom',
     commonjs: 'react-dom',
     amd: 'react-dom'
+  },
+  'react-aria': {
+    root: 'ReactARIA',
+    commonjs2: 'react-aria',
+    commonjs: 'react-aria',
+    amd: 'react-aria'
+  },
+  'react-measure': {
+    root: 'Measure',
+    commonjs2: 'react-measure',
+    commonjs: 'react-measure',
+    amd: 'react-measure'
+  },
+  'react-tether': {
+    root: 'ReactTether',
+    commonjs2: 'react-tether',
+    commonjs: 'react-tether',
+    amd: 'react-tether'
+  },
+  'tabbable': {
+    root: 'tabbable',
+    commonjs2: 'tabbable',
+    commonjs: 'tabbable',
+    amd: 'tabbable'
   }
 };
 

@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+a11y-focus-scope@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/a11y-focus-scope/-/a11y-focus-scope-1.1.3.tgz#f795384d4dd40ccec1c4a160ef4d13371d015ae8"
+  dependencies:
+    focusin "^2.0.0"
+    tabbable "^1.0.0"
+
 abbrev@1:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.0.9.tgz#91b4792588a7738c25f35dd6f63752a2f8776135"
@@ -1778,6 +1785,10 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
+focusin@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/focusin/-/focusin-2.0.0.tgz#58c01180dfb1949f03e3ddeee063739fc33b6ffc"
+
 for-in@^0.1.5:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-0.1.6.tgz#c9f96e89bfad18a545af5ec3ed352a1d9e5b4dc8"
@@ -1877,6 +1888,10 @@ generate-object-property@^1.1.0:
 get-caller-file@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-1.0.2.tgz#f702e63127e7e231c160a80c1554acb70d5047e5"
+
+get-node-dimensions@^1.2.0:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/get-node-dimensions/-/get-node-dimensions-1.2.2.tgz#7a71e8624cf9e1ab74599bb05b7e5116e995e45b"
 
 get-prefix@^1.0.0:
   version "1.0.0"
@@ -2579,7 +2594,7 @@ minimalistic-assert@^1.0.0:
   dependencies:
     brace-expansion "^1.0.0"
 
-minimist@0.0.8:
+minimist@0.0.8, minimist@~0.0.1:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.8.tgz#857fcabfc3397d2625b8228262e86aa7a011b05d"
 
@@ -2587,9 +2602,9 @@ minimist@^1.1.0, minimist@^1.1.3, minimist@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
 
-minimist@~0.0.1:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.10.tgz#de3f98543dbf96082be48ad1a0c7cda836301dcf"
+mitt@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/mitt/-/mitt-1.0.1.tgz#dd7f850967acc0b13420ac0e3e1ff69a3b1b029c"
 
 mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
   version "0.5.1"
@@ -2612,6 +2627,10 @@ nan@^2.3.0, nan@^2.3.2:
 negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
+
+no-scroll@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/no-scroll/-/no-scroll-2.0.0.tgz#2daeb4a57b94edc8f86ebc69ad02bf0823a49c2e"
 
 node-fetch@^1.0.1:
   version "1.6.3"
@@ -3346,6 +3365,16 @@ react-addons-shallow-compare@^0.14.0:
   version "0.14.8"
   resolved "https://registry.yarnpkg.com/react-addons-shallow-compare/-/react-addons-shallow-compare-0.14.8.tgz#1f26533d78cadabf4639756ec0dae5ab45427a74"
 
+react-aria@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/react-aria/-/react-aria-0.8.0.tgz#81a33eb39c53862190afe738991a5972cd3e97f2"
+  dependencies:
+    a11y-focus-scope "^1.1.3"
+    mitt "^1.0.1"
+    no-scroll "^2.0.0"
+    scroll-into-view "^1.7.3"
+    upper-case-first "^1.1.2"
+
 react-dom@15.3.2:
   version "15.3.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.3.2.tgz#c46b0aa5380d7b838e7a59c4a7beff2ed315531f"
@@ -3355,6 +3384,13 @@ react-measure@^0.3.4:
   resolved "https://registry.yarnpkg.com/react-measure/-/react-measure-0.3.5.tgz#4e6e5ec93a2781f84f5a05b8b86d9586fb7d6b15"
   dependencies:
     lodash.debounce "^3.1.1"
+
+react-measure@^1.4.5:
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/react-measure/-/react-measure-1.4.5.tgz#4aa1565872e071a642971eb4d529628c000c8802"
+  dependencies:
+    get-node-dimensions "^1.2.0"
+    resize-observer-polyfill "1.3.1"
 
 react-motion-ui-pack@^0.5.1:
   version "0.5.2"
@@ -3572,6 +3608,10 @@ requires-port@1.0.x, requires-port@1.x.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
 
+resize-observer-polyfill@1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/resize-observer-polyfill/-/resize-observer-polyfill-1.3.1.tgz#4d87e372532c867520b8fcee6d7a27962f1ce3f8"
+
 right-align@^0.1.1:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/right-align/-/right-align-0.1.3.tgz#61339b722fe6a3515689210d24e14c96148613ef"
@@ -3611,6 +3651,12 @@ sass-loader@^4.0.2:
 sax@~1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.1.tgz#7b8e656190b228e81a66aea748480d828cd2d37a"
+
+scroll-into-view@^1.7.3:
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/scroll-into-view/-/scroll-into-view-1.7.3.tgz#e145b3417844f89a151eba83b65359d6b49207ee"
+  dependencies:
+    raf "^3.1.0"
 
 "semver@2 || 3 || 4 || 5", "semver@2.x || 3.x || 4 || 5", semver@~5.3.0:
   version "5.3.0"
@@ -3871,6 +3917,10 @@ svgo@^0.7.0:
     sax "~1.2.1"
     whet.extend "~0.9.9"
 
+tabbable@^1.0.0, tabbable@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-1.0.5.tgz#eeeb8abf6ea4b9ebe024189d64b5dcfdb30863ad"
+
 tapable@^0.1.8, tapable@~0.1.8:
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-0.1.10.tgz#29c35707c2b70e50d07482b5d202e8ed446dafd4"
@@ -3997,6 +4047,16 @@ uniqs@^2.0.0:
 unpipe@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
+
+upper-case-first@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/upper-case-first/-/upper-case-first-1.1.2.tgz#5d79bedcff14419518fd2edb0a0507c9b6859115"
+  dependencies:
+    upper-case "^1.1.1"
+
+upper-case@^1.1.1:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/upper-case/-/upper-case-1.1.3.tgz#f6b4501c2ec4cdd26ba78be7222961de77621598"
 
 url-join@^1.0.0:
   version "1.1.0"

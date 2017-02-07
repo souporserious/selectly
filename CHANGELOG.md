@@ -1,4 +1,11 @@
 ## CHANGELOG
+### 0.5.0
+Replaced parts with React ARIA where applicable
+
+Breaking Changes:
+
+Added mandatory components `Trigger`, `OptionList`, and `Option`
+
 ### 0.4.0
 
 Finished and documented utilities.
