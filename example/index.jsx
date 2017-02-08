@@ -127,7 +127,7 @@ class MySelect extends Component {
   _renderOptions(options) {
     return (
       <ul className="react-select-options">
-        { options.map(option => (
+        { options.map((option, index) => (
             option.optgroup
             ? this._renderOptGroup(option)
             : this._renderOption(option)
@@ -166,22 +166,19 @@ class MySelect extends Component {
   render() {
     const { value, emptyValue, options, multiple, onChange, selectAll, deselectAll } = this.props
     const currentOptions = getCurrentOptions(options, value)
-
     return (
       <Select
         ref={c => this._select = c}
         classPrefix="react-select"
         multiple={multiple}
+        onChange={onChange}
       >
         <CustomTrigger
           emptyValue={emptyValue}
           isMultiple={multiple}
           currentValue={currentOptions}
         />
-        <OptionList
-          onOptionSelection={onChange}
-          className="react-select-menu"
-        >
+        <OptionList className="react-select-menu">
           { (selectAll || deselectAll) &&
             this._renderSelectAll()
           }

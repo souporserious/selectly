@@ -32,10 +32,12 @@ class Select extends Component {
 
   state = {
     isOpen: false,
-    width: null
+    width: null,
+    currentOption: {}
   }
 
   componentWillReceiveProps(nextProps) {
+    // if there is an incoming disabled prop we need to make sure the options get closed
     if (this.props.disabled !== nextProps.disabled &&
         nextProps.disabled === true) {
       this.setOpen(false)
@@ -59,8 +61,20 @@ class Select extends Component {
   _handleToggle(firstChild, e) {
     if (this.props.disabled) return
 
-    this.setOpen(!this.state.isOpen)
+    const { isOpen } = this.state
 
+    // toggle isOpen
+    this.setOpen(!isOpen)
+
+    // if we toggled the trigger while open then fire an on change with the
+    // currently selected member
+    if (isOpen) {
+      const currentOption = this._optionsList.getActiveMember()
+      this.setState({ currentOption })
+      this.props.onChange(currentOption)
+    }
+
+    // still onTrigger to be used like normal
     if (typeof firstChild.props.onTrigger === 'function') {
       firstChild.props.onTrigger(e)
     }
@@ -73,9 +87,11 @@ class Select extends Component {
       // without setTimeout it will focus the second tabbable item, need to figure
       // out why this is happening
       setTimeout(() => {
-        const tabbableChildren = tabbable(this._options)
+        const tabbableChildren = tabbable(findDOMNode(this._optionsList))
         if (tabbableChildren.length) {
           tabbableChildren[0].focus()
+        } else {
+          this.setOpen(false)
         }
       })
     }
@@ -85,6 +101,12 @@ class Select extends Component {
     if (!this.props.multiple) {
       this.setOpen(false)
     }
+
+    // fire our own "onChange" when an option has been selected
+    this.props.onChange(option)
+
+    // store current option for initialFocus
+    this.setState({ currentOption: option })
 
     if (typeof secondChild.props.onOptionSelection === 'function') {
       secondChild.props.onOptionSelection(option, event)
@@ -101,7 +123,7 @@ class Select extends Component {
 
   render() {
     const { offset, classPrefix, autoWidth, children } = this.props
-    const { isOpen, width } = this.state
+    const { isOpen, width, currentOption } = this.state
     const [firstChild, secondChild] = Children.toArray(children)
     return (
       <Manager>
@@ -118,9 +140,8 @@ class Select extends Component {
         >
           <Measure onMeasure={this._handleMeasure}>
             { cloneElement(firstChild, {
-                ref: c => this._trigger = findDOMNode(c),
                 isOpen,
-                keybindings: isOpen ? [] : [' '],
+                keybindings: [' '],
                 onTrigger: this._handleToggle.bind(this, firstChild),
                 onKeyDown: this._handleTriggerKeyDown
               })
@@ -128,7 +149,8 @@ class Select extends Component {
           </Measure>
           { isOpen &&
             cloneElement(secondChild, {
-              ref: c => this._options = findDOMNode(c),
+              ref: c => this._optionsList = c,
+              initialFocus: currentOption.index,
               closeOnOutsideClick: true,
               onOptionSelection: this._handleOptionSelection.bind(this, secondChild),
               onRequestClose: this._handleRequestClose.bind(this, secondChild)

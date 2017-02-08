@@ -42,7 +42,7 @@
     "react-dom": ">0.13.0"
   },
   "dependencies": {
-    "react-aria": "^0.8.0",
+    "react-aria": "^0.8.2",
     "react-measure": "^1.4.5",
     "react-tether": "^0.5.1",
     "tabbable": "^1.0.5"
