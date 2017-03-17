@@ -2,6 +2,8 @@
 ### 0.5.0
 Replaced parts with React ARIA where applicable
 
+Added better documentation
+
 Breaking Changes:
 
 Added mandatory components `Trigger`, `OptionList`, and `Option`

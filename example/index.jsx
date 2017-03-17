@@ -285,28 +285,34 @@ class Demo2 extends Component {
 }
 
 class MultiSelect extends Component {
-  state = {
-    blankValue: 'Select a color',
-    currentValues: []
+  constructor(props) {
+    super(props)
+    this.state = {
+      defaultValue: 'Select a color',
+      currentValues: []
+    }
   }
 
-  _handleChange = ({ value }) => {
+  _handleChange({ value }) {
     this.setState({
       currentValues: getToggledValues(this.state.currentValues, value)
     })
   }
 
   render() {
-    const { blankValue, currentValues } = this.state
+    const { defaultValue, currentValues } = this.state
     return (
-      <Select multiple>
+      <Select
+        multiple
+        onChange={value => this._handleChange(value)}
+      >
         <Trigger>
           { currentValues.length > 0
             ? currentValues.join(', ')
-            : blankValue
+            : defaultValue
           }
         </Trigger>
-        <OptionList onOptionSelection={this._handleChange}>
+        <OptionList tag="ul" className="react-select-menu">
           <Option value="red">Red</Option>
           <Option value="green">Green</Option>
           <Option value="blue">Blue</Option>

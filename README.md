@@ -11,8 +11,8 @@ Build custom select menus in React. Provides a low level way to build the select
 ## Example Usage
 
 ```javascript
-import { Select, Option, utils } from 'Selectly'
-const { getToggledOptions } = utils
+import { Select, Trigger, OptionList, Option, utils } from 'Selectly'
+const { getToggledValues } = utils
 
 class MultiSelect extends Component {
   constructor(props) {
@@ -25,25 +25,28 @@ class MultiSelect extends Component {
 
   _handleChange(value) {
     this.setState({
-      currentValues: getToggledOptions(this.state.currentValues, value)
+      currentValues: getToggledValues(this.state.currentValues, value)
     })
   }
 
   render() {
     const { defaultValue, currentValues } = this.state
     return (
-      <Select multiple onChange={value => this._handleChange(value)}>
-        <button>
+      <Select
+        multiple
+        onChange={value => this._handleChange(value)}
+      >
+        <Trigger>
           { currentValues.length > 0
             ? currentValues.join(', ')
             : defaultValue
           }
-        </button>
-        <ul>
+        </Trigger>
+        <OptionList tag="ul" className="react-select-menu">
           <Option value="red">Red</Option>
           <Option value="green">Green</Option>
           <Option value="blue">Blue</Option>
-        </ul>
+        </OptionList>
       </Select>
     )
   }
@@ -64,49 +67,17 @@ When `true` this allows multiple options to be selected.
 
 Puts the select menu in a disabled state.
 
-### `offset`: PropTypes.string
-
-The amount the `options` are offset from the `trigger`.
-
-### `classPrefix`: PropTypes.string
-
-Defaults to `selectly`.
-
 ### `autoWidth`: PropTypes.bool
 
 Determines if the `options` should be the same width as the `trigger`.
-
-### `renderOptions`: PropTypes.func
-
-Prop function that passes in the options to be rendered. Allows the use of a custom animation using something like `CSSTranstionGroup`.
 
 ### `onChange`: PropTypes.func
 
 Callback when an option has been selected. Passes back the value that was selected.
 
-## Select Context
+## React ARIA Components
 
-### `onOptionSelect`: PropTypes.func
-
-Callback used to pass an option value to the `onChange` prop of the `Select` component.
-
-### `isOpen`: PropTypes.bool
-
-Returns the open state of the `Select` component.
-
-<br/>
-
-## Option Props
-
-### `component`: PropTypes.string
-
-What element is used to display an option. Defaults to `li`.
-
-### `value`: PropTypes.any.isRequired
-
-A value of any kind is required for each option. This is what gets passed to the `onChange` callback in the `Select` component.
-
-<br/>
+`Trigger`, `OptionList`, and `Option` are exported directly from [React ARIA](https://github.com/souporserious/react-aria)
 
 ## Utilities
 
@@ -142,13 +113,13 @@ turns into
 
 Returns an array of all option values.
 
+### `getToggledValues`: (object prevValues, [array, string] nextValues)
+
+Returns a new array of values either added or removed.
+
 ### `getCurrentOptions`: (object options, [array, string] currentValue)
 
 Returns an array of the current option or options.
-
-### `getToggledOptions`: (object options, [array, string] values)
-
-Returns a new array of options with the passed in values either added or removed.
 
 ### `isOptionSelected`: ([array, string] currentValue, string value)
 
