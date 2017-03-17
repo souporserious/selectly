@@ -1,38 +1,35 @@
 import React, { Component, PropTypes, Children, cloneElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
-import { Select as ReactARIASelect } from 'react-aria'
-import TetherComponent from 'react-tether'
+import { Select as ARIASelect } from 'react-aria'
+import { Manager as PopperManager, Target, Popper } from 'react-popper'
 import Measure from 'react-measure'
+import Portal from 'react-travel'
 import tabbable from 'tabbable'
 import childrenPropType from './children-prop-type'
 
-const { Manager } = ReactARIASelect
+const { Manager: SelectManager } = ARIASelect
 
 class Select extends Component {
   static propTypes = {
-    name: PropTypes.string,
-    multiple: PropTypes.bool,
-    disabled: PropTypes.bool,
-    offset: PropTypes.string,
-    classPrefix: PropTypes.string,
-    autoWidth: PropTypes.bool,
-    onChange: PropTypes.func,
-    children: childrenPropType
+    multiple:        PropTypes.bool,
+    disabled:        PropTypes.bool,
+    autoWidth:       PropTypes.bool,
+    placement:       PropTypes.any,
+    renderOverlayTo: PropTypes.any,
+    onChange:        PropTypes.func,
+    children:        childrenPropType
   }
 
   static defaultProps = {
-    name: 'S' + Math.abs(~~(Math.random() * new Date())),
-    multiple: false,
-    disabled: false,
-    offset: '0px 0px',
-    classPrefix: 'selectly',
+    multiple:  false,
+    disabled:  false,
     autoWidth: true,
-    onChange: () => null
+    onChange:  () => null
   }
 
   state = {
-    isOpen: false,
-    width: null,
+    isOpen:        false,
+    width:         null,
     currentOption: {}
   }
 
@@ -58,32 +55,18 @@ class Select extends Component {
     }
   }
 
-  _handleToggle(firstChild, e) {
-    if (this.props.disabled) return
+  _handleTrigger = (firstChild, event) => {
+    this.setState(state => ({ isOpen: !state.isOpen }))
 
-    const { isOpen } = this.state
-
-    // toggle isOpen
-    this.setOpen(!isOpen)
-
-    // if we toggled the trigger while open then fire an on change with the
-    // currently selected member
-    if (isOpen) {
-      const currentOption = this._optionsList.getActiveMember()
-      this.setState({ currentOption })
-      this.props.onChange(currentOption)
-    }
-
-    // still onTrigger to be used like normal
     if (typeof firstChild.props.onTrigger === 'function') {
-      firstChild.props.onTrigger(e)
+      firstChild.props.onTrigger(event)
     }
   }
 
-  _handleTriggerKeyDown = ({ key }) => {
+  _handleTriggerKeyDown = (firstChild, event) => {
     // determine if we need to move focus to the options menu when pressing tab
     // while the menu is open
-    if (key === 'Tab' && this.state.isOpen) {
+    if (event.key === 'Tab' && this.state.isOpen) {
       // without setTimeout it will focus the second tabbable item, need to figure
       // out why this is happening
       setTimeout(() => {
@@ -94,6 +77,18 @@ class Select extends Component {
           this.setOpen(false)
         }
       })
+    }
+
+    if (typeof firstChild.props.onKeyDown === 'function') {
+      firstChild.props.onKeyDown(event)
+    }
+  }
+
+  _handleRequestClose(secondChild) {
+    this.setOpen(false)
+
+    if (typeof secondChild.props.onRequestClose === 'function') {
+      secondChild.props.onRequestClose()
     }
   }
 
@@ -113,51 +108,42 @@ class Select extends Component {
     }
   }
 
-  _handleRequestClose(secondChild) {
-    this.setOpen(false)
-
-    if (typeof secondChild.props.onRequestClose === 'function') {
-      secondChild.props.onRequestClose()
-    }
-  }
-
   render() {
-    const { offset, classPrefix, autoWidth, children } = this.props
+    const { autoWidth, renderOverlayTo, placement, children } = this.props
     const { isOpen, width, currentOption } = this.state
     const [firstChild, secondChild] = Children.toArray(children)
     return (
-      <Manager>
-        <TetherComponent
-          attachment="top left"
-          targetAttachment="bottom left"
-          offset={offset}
-          classPrefix={classPrefix}
-          constraints={[{
-            to: 'window',
-            attachment: 'together'
-          }]}
-          style={{ width: width ? `${width}px` : '' }}
-        >
+      <SelectManager>
+        <PopperManager>
           <Measure onMeasure={this._handleMeasure}>
-            { cloneElement(firstChild, {
-                isOpen,
-                keybindings: [' '],
-                onTrigger: this._handleToggle.bind(this, firstChild),
-                onKeyDown: this._handleTriggerKeyDown
-              })
-            }
+            <Target component={false}>
+              {cloneElement(firstChild, {
+                  isOpen,
+                  keybindings: [' '],
+                  onTrigger:   this._handleTrigger.bind(this, firstChild),
+                  onKeyDown:   this._handleTriggerKeyDown.bind(this, firstChild)
+                })
+              }
+            </Target>
           </Measure>
           { isOpen &&
-            cloneElement(secondChild, {
-              ref: c => this._optionsList = c,
-              initialFocus: currentOption.index,
-              closeOnOutsideClick: true,
-              onOptionSelection: this._handleOptionSelection.bind(this, secondChild),
-              onRequestClose: this._handleRequestClose.bind(this, secondChild)
-            })
+            <Portal renderTo={renderOverlayTo}>
+              <Popper
+                placement={placement}
+                style={{ width: width ? `${width}px` : '' }}
+              >
+                {cloneElement(secondChild, {
+                  ref:                 c => this._optionsList = c,
+                  initialFocus:        currentOption.index,
+                  closeOnOutsideClick: true,
+                  onOptionSelection:   this._handleOptionSelection.bind(this, secondChild),
+                  onRequestClose:      this._handleRequestClose.bind(this, secondChild)
+                })}
+              </Popper>
+            </Portal>
           }
-        </TetherComponent>
-      </Manager>
+        </PopperManager>
+      </SelectManager>
     )
   }
 }

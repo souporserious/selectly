@@ -6,7 +6,7 @@ import { Select, Trigger, OptionList, Option, utils } from '../src/selectly.js'
 import '../src/selectly.scss'
 import './main.scss'
 
-const { buildOptionsLookup, getCurrentOptions, getToggledOptions, getAllValues, isOptionSelected } = utils
+const { buildOptionsLookup, getCurrentOptions, getToggledValues, getAllValues, isOptionSelected } = utils
 
 // TODO:
 // recreate these:
@@ -247,7 +247,7 @@ class Demo2 extends Component {
 
   _handleChange = ({ value }) => {
     this.setState({
-      currentValue: getToggledOptions(this.state.currentValue, value)
+      currentValue: getToggledValues(this.state.currentValue, value)
     })
   }
 
@@ -286,24 +286,24 @@ class Demo2 extends Component {
 
 class MultiSelect extends Component {
   state = {
-    defaultValue: 'Select a color',
+    blankValue: 'Select a color',
     currentValues: []
   }
 
   _handleChange = ({ value }) => {
     this.setState({
-      currentValues: getToggledOptions(this.state.currentValues, value)
+      currentValues: getToggledValues(this.state.currentValues, value)
     })
   }
 
   render() {
-    const { defaultValue, currentValues } = this.state
+    const { blankValue, currentValues } = this.state
     return (
       <Select multiple>
         <Trigger>
           { currentValues.length > 0
             ? currentValues.join(', ')
-            : defaultValue
+            : blankValue
           }
         </Trigger>
         <OptionList onOptionSelection={this._handleChange}>
