@@ -2,7 +2,6 @@ import React, { Component, PropTypes, Children, cloneElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import { Select as ARIASelect } from 'react-aria'
 import { Manager as PopperManager } from 'react-popper'
-import childrenPropType from './children-prop-type'
 
 const { Manager: SelectManager } = ARIASelect
 
@@ -12,11 +11,10 @@ class Select extends Component {
   }
 
   static propTypes = {
-    multiple:        PropTypes.bool,
-    disabled:        PropTypes.bool,
-    autoWidth:       PropTypes.bool,
-    onChange:        PropTypes.func,
-    children:        childrenPropType
+    multiple:  PropTypes.bool,
+    disabled:  PropTypes.bool,
+    autoWidth: PropTypes.bool,
+    onChange:  PropTypes.func
   }
 
   static defaultProps = {
@@ -86,7 +84,7 @@ class Select extends Component {
 
       // fire a callback with the option just selected as well as all currentOptions
       this.props.onChange(option, currentOptions)
-
+      
       // finally, update state with the new options
       return { currentOptions }
     }, () => {
