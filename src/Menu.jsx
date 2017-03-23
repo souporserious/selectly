@@ -4,14 +4,14 @@ import { Popper } from 'react-popper'
 import { Select as ARIASelect } from 'react-aria'
 
 const Menu = ({
-  renderTo,
+  renderTo = document.body,
   placement,
   children,
   ...restProps
 }, {
   selectly
-}) => selectly.isOpen && (
-  <Portal renderTo={renderTo}>
+}) => {
+  const optionList = (
     <ARIASelect.OptionList
       component={false}
       closeOnOutsideClick={true}
@@ -29,8 +29,13 @@ const Menu = ({
         </Popper>
       }
     </ARIASelect.OptionList>
-  </Portal>
-)
+  )
+  const component = renderTo
+    ? <Portal renderTo={renderTo} children={optionList}/>
+    : optionList
+
+  return selectly.isOpen && component
+}
 
 Menu.contextTypes = {
   selectly: PropTypes.object
