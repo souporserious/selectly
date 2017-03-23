@@ -1,21 +1,20 @@
 import React, { Component, PropTypes, Children, cloneElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import { Select as ARIASelect } from 'react-aria'
-import { Manager as PopperManager, Target, Popper } from 'react-popper'
-import Measure from 'react-measure'
-import Portal from 'react-travel'
-import tabbable from 'tabbable'
+import { Manager as PopperManager } from 'react-popper'
 import childrenPropType from './children-prop-type'
 
 const { Manager: SelectManager } = ARIASelect
 
 class Select extends Component {
+  static childContextTypes = {
+    selectly: PropTypes.object
+  }
+
   static propTypes = {
     multiple:        PropTypes.bool,
     disabled:        PropTypes.bool,
     autoWidth:       PropTypes.bool,
-    placement:       PropTypes.any,
-    renderOverlayTo: PropTypes.any,
     onChange:        PropTypes.func,
     children:        childrenPropType
   }
@@ -28,120 +27,89 @@ class Select extends Component {
   }
 
   state = {
-    isOpen:        false,
-    width:         null,
-    currentOption: {}
+    isOpen:         false,
+    triggerWidth:   null,
+    currentOptions: []
+  }
+
+  getChildContext() {
+    return {
+      selectly: {
+        ...this.state,
+        autoWidth:        this.props.autoWidth,
+        open:             this.open,
+        close:            this.close,
+        toggle:           this.toggle,
+        onTriggerMeasure: this._handleTriggerMeasure,
+        onChange:         this._handleChange
+      }
+    }
   }
 
   componentWillReceiveProps(nextProps) {
     // if there is an incoming disabled prop we need to make sure the options get closed
-    if (this.props.disabled !== nextProps.disabled &&
-        nextProps.disabled === true) {
-      this.setOpen(false)
+    if (
+      this.props.disabled !== nextProps.disabled &&
+      nextProps.disabled === true
+    ) {
+      this.close()
     }
   }
 
-  setOpen(isOpen, cb = () => null) {
-    this.setState({ isOpen }, cb)
+  open = () => {
+    this.setState({ isOpen: true })
   }
 
-  get isOpen() {
-    return this.state.isOpen
+  close = () => {
+    this.setState({ isOpen: false })
   }
 
-  _handleMeasure = ({ width }) => {
-    if (this.props.autoWidth) {
-      this.setState({ width })
-    }
-  }
-
-  _handleTrigger = (firstChild, event) => {
+  toggle = () => {
     this.setState(state => ({ isOpen: !state.isOpen }))
-
-    if (typeof firstChild.props.onTrigger === 'function') {
-      firstChild.props.onTrigger(event)
-    }
   }
 
-  _handleTriggerKeyDown = (firstChild, event) => {
-    // determine if we need to move focus to the options menu when pressing tab
-    // while the menu is open
-    if (event.key === 'Tab' && this.state.isOpen) {
-      // without setTimeout it will focus the second tabbable item, need to figure
-      // out why this is happening
-      setTimeout(() => {
-        const tabbableChildren = tabbable(findDOMNode(this._optionsList))
-        if (tabbableChildren.length) {
-          tabbableChildren[0].focus()
-        } else {
-          this.setOpen(false)
-        }
-      })
-    }
-
-    if (typeof firstChild.props.onKeyDown === 'function') {
-      firstChild.props.onKeyDown(event)
-    }
+  _handleTriggerMeasure = ({ width }) => {
+    this.setState({ triggerWidth: width })
   }
 
-  _handleRequestClose(secondChild) {
-    this.setOpen(false)
+  _handleChange = (option) => {
+    this.setState(state => {
+      const currentOptions = [...state.currentOptions]
+      const index = currentOptions.indexOf(option)
 
-    if (typeof secondChild.props.onRequestClose === 'function') {
-      secondChild.props.onRequestClose()
-    }
-  }
+      // toggle the incoming option
+      if (index > -1) {
+        currentOptions.splice(index, 1)
+      } else {
+        currentOptions.push(option)
+      }
 
-  _handleOptionSelection(secondChild, option, event) {
-    if (!this.props.multiple) {
-      this.setOpen(false)
-    }
+      // fire a callback with the option just selected as well as all currentOptions
+      this.props.onChange(option, currentOptions)
 
-    // fire our own "onChange" when an option has been selected
-    this.props.onChange(option)
-
-    // store current option for initialFocus
-    this.setState({ currentOption: option })
-
-    if (typeof secondChild.props.onOptionSelection === 'function') {
-      secondChild.props.onOptionSelection(option, event)
-    }
+      // finally, update state with the new options
+      return { currentOptions }
+    }, () => {
+      // if this is not a multiple select we close the popover after selection
+      if (!this.props.multiple) {
+        this.close()
+      }
+    })
   }
 
   render() {
-    const { autoWidth, renderOverlayTo, placement, children } = this.props
-    const { isOpen, width, currentOption } = this.state
-    const [firstChild, secondChild] = Children.toArray(children)
+    const {
+      multiple,
+      disabled,
+      autoWidth,
+      onChange,
+      children,
+      ...restProps
+    } = this.props
     return (
-      <SelectManager>
-        <PopperManager>
-          <Measure onMeasure={this._handleMeasure}>
-            <Target component={false}>
-              {cloneElement(firstChild, {
-                  isOpen,
-                  keybindings: [' '],
-                  onTrigger:   this._handleTrigger.bind(this, firstChild),
-                  onKeyDown:   this._handleTriggerKeyDown.bind(this, firstChild)
-                })
-              }
-            </Target>
-          </Measure>
-          { isOpen &&
-            <Portal renderTo={renderOverlayTo}>
-              <Popper
-                placement={placement}
-                style={{ width: width ? `${width}px` : '' }}
-              >
-                {cloneElement(secondChild, {
-                  ref:                 c => this._optionsList = c,
-                  initialFocus:        currentOption.index,
-                  closeOnOutsideClick: true,
-                  onOptionSelection:   this._handleOptionSelection.bind(this, secondChild),
-                  onRequestClose:      this._handleRequestClose.bind(this, secondChild)
-                })}
-              </Popper>
-            </Portal>
-          }
+      <SelectManager component={false}>
+        <PopperManager {...restProps}>
+          {children}
         </PopperManager>
       </SelectManager>
     )

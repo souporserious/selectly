@@ -28,17 +28,17 @@ var externals = {
     commonjs: 'react-measure',
     amd: 'react-measure'
   },
-  'react-tether': {
-    root: 'ReactTether',
-    commonjs2: 'react-tether',
-    commonjs: 'react-tether',
-    amd: 'react-tether'
+  'react-popper': {
+    root: 'ReactPopper',
+    commonjs2: 'react-popper',
+    commonjs: 'react-popper',
+    amd: 'react-popper'
   },
-  'tabbable': {
-    root: 'tabbable',
-    commonjs2: 'tabbable',
-    commonjs: 'tabbable',
-    amd: 'tabbable'
+  'react-travel': {
+    root: 'Portal',
+    commonjs2: 'react-travel',
+    commonjs: 'react-travel',
+    amd: 'react-travel'
   }
 };
 

@@ -1,4 +1,7 @@
 ## CHANGELOG
+### 0.6.0
+Split components into `Select`, `Trigger`, `Menu`, and `Option` to allow better composition
+
 ### 0.5.0
 Replaced parts with React ARIA where applicable
 

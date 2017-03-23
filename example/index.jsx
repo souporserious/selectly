@@ -1,7 +1,7 @@
 import React, { Component, Children, PropTypes, cloneElement } from 'react'
 import ReactDOM from 'react-dom'
 import { spring } from 'react-motion'
-import { Select, Trigger, OptionList, Option, utils } from '../src/selectly.js'
+import { Select, Trigger, Menu, OptionList, Option, utils } from '../src/selectly.js'
 
 import '../src/selectly.scss'
 import './main.scss'
@@ -169,7 +169,6 @@ class MySelect extends Component {
     return (
       <Select
         ref={c => this._select = c}
-        classPrefix="react-select"
         multiple={multiple}
         onChange={onChange}
       >
@@ -178,12 +177,14 @@ class MySelect extends Component {
           isMultiple={multiple}
           currentValue={currentOptions}
         />
-        <OptionList className="react-select-menu">
-          { (selectAll || deselectAll) &&
-            this._renderSelectAll()
-          }
-          {this._renderOptions(options)}
-        </OptionList>
+        <Menu className="react-select">
+          <div className="react-select-menu">
+            { (selectAll || deselectAll) &&
+              this._renderSelectAll()
+            }
+            {this._renderOptions(options)}
+          </div>
+        </Menu>
       </Select>
     )
   }
@@ -304,6 +305,7 @@ class MultiSelect extends Component {
     return (
       <Select
         multiple
+        autoWidth={false}
         onChange={value => this._handleChange(value)}
       >
         <Trigger>
@@ -312,11 +314,11 @@ class MultiSelect extends Component {
             : defaultValue
           }
         </Trigger>
-        <OptionList tag="ul" className="react-select-menu">
+        <Menu className="react-select-menu">
           <Option value="red">Red</Option>
           <Option value="green">Green</Option>
           <Option value="blue">Blue</Option>
-        </OptionList>
+        </Menu>
       </Select>
     )
   }
