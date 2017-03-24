@@ -4,7 +4,7 @@
 
 `Select` holds an internal state of options now
 
-`Option` accepts a child function provides wether it is selected or not
+`Option` accepts a child function that provides an object with `props`, `isHighlighted`, `isMultiple`, `isSelected`
 
 ### 0.6.0
 Split components into `Select`, `Trigger`, `Menu`, and `Option` to allow better composition

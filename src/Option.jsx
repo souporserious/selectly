@@ -33,12 +33,13 @@ class Option extends Component {
   }
 
   render() {
+    const { multiple: isMultiple } = this.context.selectly
     const { children, ...restProps } = this.props
     const { isSelected } = this.state
     return (
       <Select.Option {...restProps}>
         {typeof children === 'function'
-          ? props => children({ ...props, isSelected })
+          ? props => children({ ...props, isMultiple, isSelected })
           : children
         }
       </Select.Option>
