@@ -2,8 +2,14 @@ import React, { Component, PropTypes, Children, cloneElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import { Select as ARIASelect } from 'react-aria'
 import { Manager as PopperManager } from 'react-popper'
+import getToggledValues from './utils/get-toggled-values'
+import isOptionSelected from './utils/is-option-selected'
 
 const { Manager: SelectManager } = ARIASelect
+
+const arraysEqual = (a, b) => (
+  a.sort().join(' ') === b.sort().join(' ')
+)
 
 class Select extends Component {
   static childContextTypes = {
@@ -11,40 +17,63 @@ class Select extends Component {
   }
 
   static propTypes = {
-    multiple:  PropTypes.bool,
-    disabled:  PropTypes.bool,
+    multiple: PropTypes.bool,
+    disabled: PropTypes.bool,
     autoWidth: PropTypes.bool,
-    onChange:  PropTypes.func
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+    onChange: PropTypes.func
   }
 
   static defaultProps = {
-    multiple:  false,
-    disabled:  false,
+    multiple: false,
+    disabled: false,
     autoWidth: true,
-    onChange:  () => null
+    onChange: () => null
   }
 
   state = {
-    isOpen:         false,
-    triggerWidth:   null,
-    currentOptions: []
+    isOpen: false,
+    triggerWidth: null,
+    value: this.props.value
   }
+  options = []
 
   getChildContext() {
     return {
       selectly: {
         ...this.state,
-        autoWidth:        this.props.autoWidth,
-        open:             this.open,
-        close:            this.close,
-        toggle:           this.toggle,
+        autoWidth: this.props.autoWidth,
+        open: this.open,
+        close: this.close,
+        toggle: this.toggle,
+        addOption: this._addOption,
+        removeOption: this._removeOption,
         onTriggerMeasure: this._handleTriggerMeasure,
-        onChange:         this._handleChange
+        onChange: this._handleChange
       }
     }
   }
 
   componentWillReceiveProps(nextProps) {
+    // update any new values by comparing the current values with incoming values
+    if (nextProps.value) {
+      if (nextProps.value.constructor === Array) {
+        if (
+          this.props.value && !arraysEqual(this.props.value, nextProps.value) ||
+          this.state.value && !arraysEqual(this.state.value, nextProps.value)
+        ) {
+          this._setValue(nextProps.value)
+        }
+      } else {
+        if (
+          this.props.value !== nextProps.value ||
+          this.state.value !== nextProps.value
+        ) {
+          this._setValue(nextProps.value)
+        }
+      }
+    }
+
     // if there is an incoming disabled prop we need to make sure the options get closed
     if (
       this.props.disabled !== nextProps.disabled &&
@@ -66,30 +95,56 @@ class Select extends Component {
     this.setState(state => ({ isOpen: !state.isOpen }))
   }
 
+  _addOption = (option) => {
+    // store option so we can update its state
+    this.options.push(option)
+
+    // determine if this option is selected or not
+    if (isOptionSelected(this.state.value, option.value)) {
+      option.setSelected(true)
+    }
+  }
+
+  _removeOption = (value) => {
+    this.options = this.options.filter(option => option.value !== value)
+  }
+
   _handleTriggerMeasure = ({ width }) => {
     this.setState({ triggerWidth: width })
   }
 
-  _handleChange = (option) => {
-    this.setState(state => {
-      const currentOptions = [...state.currentOptions]
-      const index = currentOptions.indexOf(option)
+  _setValue(value, cb) {
+    this.setState({ value }, () => {
+      this.options.forEach(option => {
+        const isSelected = isOptionSelected(value, option.value)
+        option.setSelected(isSelected)
+      })
 
-      // toggle the incoming option
-      if (index > -1) {
-        currentOptions.splice(index, 1)
-      } else {
-        currentOptions.push(option)
+      if (typeof cb === 'function') {
+        cb()
       }
+    })
+  }
 
-      // fire a callback with the option just selected as well as all currentOptions
-      this.props.onChange(option, currentOptions)
-      
-      // finally, update state with the new options
-      return { currentOptions }
-    }, () => {
-      // if this is not a multiple select we close the popover after selection
-      if (!this.props.multiple) {
+  _getSelectedOptions() {
+    return this.options.filter(option => option.getSelected())
+  }
+
+  _handleChange = (option) => {
+    const { multiple, onChange } = this.props
+    const newValue = multiple
+      ? getToggledValues(this.state.value, option.value)
+      : option.value
+
+    this._setValue(newValue, () => {
+      onChange({
+        value: newValue,
+        option: option,
+        options: this.options,
+        selectedOptions: this._getSelectedOptions()
+      })
+
+      if (!multiple) {
         this.close()
       }
     })

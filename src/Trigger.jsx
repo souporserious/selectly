@@ -3,27 +3,45 @@ import { Target } from 'react-popper'
 import { Trigger as ARIATrigger } from 'react-aria'
 import Measure from 'react-measure'
 
-const Trigger = ({ onTrigger, children, ...restProps }, { selectly }) => {
+const Trigger = ({
+  children,
+  ...restProps
+}, {
+  selectly
+}) => {
+  const { value, isOpen, toggle, autoWidth, onTriggerMeasure } = selectly
+  const stringValue = value && value.constructor === Array
+    ? value.join(', ')
+    : value
+  let childrenToRender
+
+  if (typeof children === 'function') {
+    childrenToRender = props => children(props, {
+      isOpen,
+      value,
+      stringValue
+    })
+  } else if (children) {
+    childrenToRender = children
+  } else if (value) {
+    childrenToRender = stringValue
+  }
+
   const component = (
     <Target component={false}>
       <ARIATrigger
-        isOpen={selectly.isOpen}
+        isOpen={isOpen}
         keybindings={[' ']}
-        onTrigger={selectly.toggle}
-        children={typeof children === 'function'
-          ? props => children(props, {
-              isOpen: selectly.isOpen,
-              currentOptions: selectly.currentOptions
-            })
-          : children
-        }
+        onTrigger={toggle}
+        children={childrenToRender}
         {...restProps}
       />
     </Target>
   )
-  return selectly.autoWidth
+
+  return autoWidth
     ? <Measure
-        onMeasure={selectly.onTriggerMeasure}
+        onMeasure={onTriggerMeasure}
         children={component}
       />
     : component

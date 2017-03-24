@@ -67,12 +67,12 @@ class MySelect extends Component {
     deselectAll: false
   }
 
-  state = {
-    focusedIndex: -1
+  open() {
+    this._select.open()
   }
 
-  setOpen(isOpen) {
-    this._select.setOpen(isOpen)
+  close() {
+    this._select.close()
   }
 
   _renderOption({ value, label }) {
@@ -170,6 +170,7 @@ class MySelect extends Component {
       <Select
         ref={c => this._select = c}
         multiple={multiple}
+        value={value}
         onChange={onChange}
       >
         <CustomTrigger
@@ -192,7 +193,7 @@ class MySelect extends Component {
 
 class Demo1 extends Component {
   state = {
-    currentValue: null,
+    value: null,
     options: [
       { label: 'Dogs', optgroup: [
         { value: 'beagle', label: 'Beagle' },
@@ -210,23 +211,23 @@ class Demo1 extends Component {
   }
 
   _openSelectMenu = () => {
-    this.refs.select.setOpen(true)
+    this._select.open()
   }
 
   _handleChange = ({ value }) => {
-    this.setState({ currentValue: value })
+    this.setState({ value })
   }
 
   render() {
-    const { currentValue, options } = this.state
+    const { value, options } = this.state
     return (
       <div>
         <label onClick={this._openSelectMenu}>
           Choose an animal:
         </label>
         <MySelect
-          ref="select"
-          value={currentValue}
+          ref={c => this._select = c}
+          value={value}
           options={options}
           onChange={this._handleChange}
         />
@@ -237,7 +238,7 @@ class Demo1 extends Component {
 
 class Demo2 extends Component {
   state = {
-    currentValue: ['the-shining', 'halloween'],
+    value: ['the-shining', 'halloween'],
     options: [
       { value: 'the-shining', label: 'The Shining' },
       { value: 'poltergeist', label: 'Poltergeist' },
@@ -247,32 +248,29 @@ class Demo2 extends Component {
   }
 
   _handleChange = ({ value }) => {
-    this.setState({
-      currentValue: getToggledValues(this.state.currentValue, value)
-    })
+    this.setState({ value })
   }
 
   _handleSelectAll = () => {
     this.setState({
-      currentValue: getAllValues(this.state.options)
+      value: getAllValues(this.state.options)
     })
   }
 
   _handleDeselectAll = () => {
     this.setState({
-      currentValue: []
+      value: []
     })
   }
 
   render() {
-    const { currentValue, options } = this.state
-
+    const { value, options } = this.state
     return (
       <div>
         <label>What's your favorite scary movie:</label>
         <MySelect
           emptyValue="Select A Value"
-          value={currentValue}
+          value={value}
           options={options}
           checkbox
           multiple
@@ -290,34 +288,45 @@ class MultiSelect extends Component {
     super(props)
     this.state = {
       defaultValue: 'Select a color',
-      currentValues: []
+      value: [],
+      options: ['red', 'green', 'blue']
     }
   }
 
-  _handleChange({ value }) {
-    this.setState({
-      currentValues: getToggledValues(this.state.currentValues, value)
-    })
+  _handleChange = ({ value }) => {
+    this.setState({ value })
   }
 
   render() {
-    const { defaultValue, currentValues } = this.state
+    const { defaultValue, value, options } = this.state
     return (
       <Select
         multiple
         autoWidth={false}
-        onChange={value => this._handleChange(value)}
+        value={value}
+        onChange={this._handleChange}
       >
-        <Trigger>
-          { currentValues.length > 0
-            ? currentValues.join(', ')
-            : defaultValue
-          }
-        </Trigger>
+        <Trigger/>
         <Menu className="react-select-menu">
-          <Option value="red">Red</Option>
-          <Option value="green">Green</Option>
-          <Option value="blue">Blue</Option>
+          <button onClick={() => this.setState({ value: options })}>
+            Select All
+          </button>
+          <button onClick={() => this.setState({ value: [] })}>
+            Deselect All
+          </button>
+          <button onClick={() => this.setState({ value: ['red', 'blue'] })}>
+            Red & Blue
+          </button>
+          {options.map(value =>
+            <Option key={value} value={value}>
+              {({ props, isHighlighted, isSelected }) =>
+                <div {...props} style={{ backgroundColor: isHighlighted && '#f1f1f1' }}>
+                  <input type="checkbox" checked={isSelected} readOnly/>
+                  {value}
+                </div>
+              }
+            </Option>
+          )}
         </Menu>
       </Select>
     )

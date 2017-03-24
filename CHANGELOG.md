@@ -1,4 +1,11 @@
 ## CHANGELOG
+### 0.7.0
+`onChange` now returns an object with `value`, `option`, `options`, and `selectedOptions`
+
+`Select` holds an internal state of options now
+
+`Option` accepts a child function provides wether it is selected or not
+
 ### 0.6.0
 Split components into `Select`, `Trigger`, `Menu`, and `Option` to allow better composition
 

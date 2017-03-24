@@ -1,4 +1,4 @@
-export default function getToggledValues(prevValues, nextValues) {
+export default function getToggledValues(prevValues = [], nextValues) {
   const newValues = [...prevValues]
 
   if (nextValues.constructor !== Array) {
