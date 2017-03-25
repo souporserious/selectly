@@ -7,6 +7,7 @@ const Menu = ({
   component,
   renderTo = document.body,
   placement,
+  style,
   children,
   ...restProps
 }, {
@@ -24,7 +25,7 @@ const Menu = ({
         <Popper
           component={component}
           placement={placement}
-          style={{ width: selectly.triggerWidth }}
+          style={{ width: selectly.triggerWidth, ...style }}
           {...optionListProps}
         >
           {children}
