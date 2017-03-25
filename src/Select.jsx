@@ -43,6 +43,7 @@ class Select extends Component {
       selectly: {
         ...this.state,
         autoWidth: this.props.autoWidth,
+        multiple: this.props.multiple,
         open: this.open,
         close: this.close,
         toggle: this.toggle,
