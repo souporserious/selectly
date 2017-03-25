@@ -4,6 +4,7 @@ import { Popper } from 'react-popper'
 import { Select as ARIASelect } from 'react-aria'
 
 const Menu = ({
+  component,
   renderTo = document.body,
   placement,
   children,
@@ -21,6 +22,7 @@ const Menu = ({
     >
       {optionListProps =>
         <Popper
+          component={component}
           placement={placement}
           style={{ width: selectly.triggerWidth }}
           {...optionListProps}
@@ -30,11 +32,11 @@ const Menu = ({
       }
     </ARIASelect.OptionList>
   )
-  const component = renderTo
+  const componentToRender = renderTo
     ? <Portal renderTo={renderTo} children={optionList}/>
     : optionList
 
-  return selectly.isOpen && component
+  return selectly.isOpen && componentToRender
 }
 
 Menu.contextTypes = {
