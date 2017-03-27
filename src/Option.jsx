@@ -4,7 +4,8 @@ import { Select } from 'react-aria'
 
 class Option extends Component {
   static contextTypes = {
-    selectly: PropTypes.object
+    selectly: PropTypes.object,
+    optgroup: PropTypes.object
   }
 
   state = {
@@ -12,23 +13,31 @@ class Option extends Component {
   }
 
   componentDidMount() {
-    this.context.selectly.addOption({
+    const { selectly, optgroup } = this.context
+    const option = {
       value: this.props.value,
+      label: this.props.label || this.props.value,
       node: findDOMNode(this),
-      setSelected: this.setSelected,
-      getSelected: this.getSelected
-    })
+      setSelectedState: this.setSelectedState,
+      getSelectedState: this.getSelectedState
+    }
+
+    selectly.addOption(option)
+
+    if (optgroup) {
+      optgroup.addOption(option)
+    }
   }
 
   componentWillUnmount() {
     this.context.selectly.removeOption(this.props.value)
   }
 
-  setSelected = (isSelected) => {
+  setSelectedState = (isSelected) => {
     this.setState({ isSelected })
   }
 
-  getSelected = () => {
+  getSelectedState = () => {
     return this.state.isSelected
   }
 

@@ -6,13 +6,35 @@ import { Select, Trigger, Menu, OptionList, Option, utils } from '../src/selectl
 import '../src/selectly.scss'
 import './main.scss'
 
-const { buildOptionsLookup, getCurrentOptions, getToggledValues, getAllValues, isOptionSelected } = utils
+const {
+  buildOptionsLookup,
+  getCurrentOptions,
+  getToggledValues,
+  getAllValues,
+  isOptionSelected,
+  withOptGroupProps
+} = utils
 
 // TODO:
 // recreate these:
 // http://tympanus.net/Development/SelectInspiration/index4.html
 // accessible:
 // http://www.w3.org/TR/WCAG10-HTML-TECHS/#forms
+
+const OptGroup = withOptGroupProps(({
+  title,
+  children,
+  isAllSelected,
+  selectAll,
+  deselectAll
+}) => (
+  <div>
+    <header onClick={isAllSelected ? deselectAll : selectAll}>
+      {title}
+    </header>
+    {children}
+  </div>
+))
 
 class CustomTrigger extends Component {
   _renderLabel(label) {
@@ -306,7 +328,20 @@ class MultiSelect extends Component {
         value={value}
         onChange={this._handleChange}
       >
-        <Trigger/>
+        <Trigger>
+          {(props, { selectedOptions }) =>
+            <button {...props} style={{ display: 'flex' }}>
+              {selectedOptions.length > 0
+                ? selectedOptions.map(({ label }) =>
+                    <div key={label} style={{ padding: 2, margin: 2, backgroundColor: '#ccc' }}>
+                      {label}
+                    </div>
+                  )
+                : 'Select a value'
+              }
+            </button>
+          }
+        </Trigger>
         <Menu className="react-select-menu">
           <button onClick={() => this.setState({ value: options })}>
             Select All
@@ -317,16 +352,18 @@ class MultiSelect extends Component {
           <button onClick={() => this.setState({ value: ['red', 'blue'] })}>
             Red & Blue
           </button>
-          {options.map(value =>
-            <Option key={value} value={value}>
-              {({ props, isHighlighted, isSelected }) =>
-                <div {...props} style={{ backgroundColor: isHighlighted && '#f1f1f1' }}>
-                  <input type="checkbox" checked={isSelected} readOnly/>
-                  {value}
-                </div>
-              }
-            </Option>
-          )}
+          <OptGroup title="Colors">
+            {options.map(value =>
+              <Option key={value} value={value} label={value.toUpperCase()}>
+                {({ props, isHighlighted, isSelected }) =>
+                  <div {...props} style={{ backgroundColor: isHighlighted && '#f1f1f1' }}>
+                    <input type="checkbox" checked={isSelected} readOnly/>
+                    {value}
+                  </div>
+                }
+              </Option>
+            )}
+          </OptGroup>
         </Menu>
       </Select>
     )

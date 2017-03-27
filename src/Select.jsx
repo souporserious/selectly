@@ -11,6 +11,8 @@ const arraysEqual = (a, b) => (
   a.sort().join(' ') === b.sort().join(' ')
 )
 
+const noop = () => null
+
 class Select extends Component {
   static childContextTypes = {
     selectly: PropTypes.object
@@ -28,13 +30,14 @@ class Select extends Component {
     multiple: false,
     disabled: false,
     autoWidth: true,
-    onChange: () => null
+    onChange: noop
   }
 
   state = {
     isOpen: false,
     triggerWidth: null,
-    value: this.props.value
+    value: this.props.value,
+    selectedOptions: []
   }
   options = []
 
@@ -102,7 +105,7 @@ class Select extends Component {
 
     // determine if this option is selected or not
     if (isOptionSelected(this.state.value, option.value)) {
-      option.setSelected(true)
+      option.setSelectedState(true)
     }
   }
 
@@ -114,21 +117,24 @@ class Select extends Component {
     this.setState({ triggerWidth: width })
   }
 
-  _setValue(value, cb) {
-    this.setState({ value }, () => {
-      this.options.forEach(option => {
-        const isSelected = isOptionSelected(value, option.value)
-        option.setSelected(isSelected)
-      })
+  _setValue(value, cb = noop) {
+    const selectedOptions = []
 
-      if (typeof cb === 'function') {
-        cb()
+    this.options.forEach(option => {
+      const isSelected = isOptionSelected(value, option.value)
+
+      option.setSelectedState(isSelected)
+
+      if (isSelected) {
+        selectedOptions.push(option)
       }
     })
+
+    this.setState({ value, selectedOptions }, cb)
   }
 
   _getSelectedOptions() {
-    return this.options.filter(option => option.getSelected())
+    return this.options.filter(option => option.getSelectedState())
   }
 
   _handleChange = (option) => {
@@ -142,7 +148,7 @@ class Select extends Component {
         value: newValue,
         option: option,
         options: this.options,
-        selectedOptions: this._getSelectedOptions()
+        selectedOptions: this.state.selectedOptions
       })
 
       if (!multiple) {

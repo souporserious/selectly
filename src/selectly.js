@@ -7,13 +7,15 @@ import getCurrentOptions from './utils/get-current-options'
 import getToggledValues from './utils/get-toggled-values'
 import getAllValues from './utils/get-all-values'
 import isOptionSelected from './utils/is-option-selected'
+import withOptGroupProps from './utils/with-opt-group-props'
 
 const utils = {
   buildOptionsLookup,
   getCurrentOptions,
   getToggledValues,
   getAllValues,
-  isOptionSelected
+  isOptionSelected,
+  withOptGroupProps
 }
 
 export {

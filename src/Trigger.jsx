@@ -4,27 +4,35 @@ import { Trigger as ARIATrigger } from 'react-aria'
 import Measure from 'react-measure'
 
 const Trigger = ({
+  defaultValue,
+  renderLabel = label => label,
   children,
   ...restProps
 }, {
   selectly
 }) => {
-  const { value, isOpen, toggle, autoWidth, onTriggerMeasure } = selectly
-  const stringValue = value && value.constructor === Array
-    ? value.join(', ')
-    : value
+  const {
+    value,
+    selectedOptions,
+    isOpen,
+    toggle,
+    autoWidth,
+    onTriggerMeasure
+  } = selectly
   let childrenToRender
 
   if (typeof children === 'function') {
     childrenToRender = props => children(props, {
       isOpen,
       value,
-      stringValue
+      selectedOptions
     })
   } else if (children) {
     childrenToRender = children
-  } else if (value) {
-    childrenToRender = stringValue
+  } else if (selectedOptions.length > 0) {
+    childrenToRender = selectedOptions.map(o => renderLabel(o.label))
+  } else {
+    childrenToRender = defaultValue
   }
 
   const component = (
