@@ -3,30 +3,27 @@ import { Target } from 'react-popper'
 import { Trigger as ARIATrigger } from 'react-aria'
 import Measure from 'react-measure'
 
-const Trigger = ({
-  defaultValue,
-  renderLabel = label => label,
-  children,
-  ...restProps
-}, {
-  selectly
-}) => {
+const Trigger = (
+  { defaultValue, renderLabel = label => label, children, ...restProps },
+  { selectly }
+) => {
   const {
     value,
     selectedOptions,
     isOpen,
     toggle,
     autoWidth,
-    onTriggerMeasure
+    onTriggerMeasure,
   } = selectly
   let childrenToRender
 
   if (typeof children === 'function') {
-    childrenToRender = props => children(props, {
-      isOpen,
-      value,
-      selectedOptions
-    })
+    childrenToRender = props =>
+      children(props, {
+        isOpen,
+        value,
+        selectedOptions,
+      })
   } else if (children) {
     childrenToRender = children
   } else if (selectedOptions.length > 0) {
@@ -46,17 +43,13 @@ const Trigger = ({
       />
     </Target>
   )
-
   return autoWidth
-    ? <Measure
-        onMeasure={onTriggerMeasure}
-        children={component}
-      />
+    ? <Measure onMeasure={onTriggerMeasure} children={component} />
     : component
 }
 
 Trigger.contextTypes = {
-  selectly: PropTypes.object
+  selectly: PropTypes.object,
 }
 
 export default Trigger

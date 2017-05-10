@@ -5,11 +5,11 @@ import { Select } from 'react-aria'
 class Option extends Component {
   static contextTypes = {
     selectly: PropTypes.object,
-    optgroup: PropTypes.object
+    optgroup: PropTypes.object,
   }
 
   state = {
-    isSelected: false
+    isSelected: false,
   }
 
   componentDidMount() {
@@ -19,7 +19,7 @@ class Option extends Component {
       label: this.props.label || this.props.value,
       node: findDOMNode(this),
       setSelectedState: this.setSelectedState,
-      getSelectedState: this.getSelectedState
+      getSelectedState: this.getSelectedState,
     }
 
     selectly.addOption(option)
@@ -33,7 +33,7 @@ class Option extends Component {
     this.context.selectly.removeOption(this.props.value)
   }
 
-  setSelectedState = (isSelected) => {
+  setSelectedState = isSelected => {
     this.setState({ isSelected })
   }
 
@@ -49,8 +49,7 @@ class Option extends Component {
       <Select.Option {...restProps}>
         {typeof children === 'function'
           ? props => children({ ...props, isMultiple, isSelected })
-          : children
-        }
+          : children}
       </Select.Option>
     )
   }

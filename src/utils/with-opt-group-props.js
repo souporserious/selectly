@@ -3,7 +3,7 @@ import React, { Component, PropTypes, createElement } from 'react'
 export default function withOptGroupProps(WrappedComponent) {
   return class extends Component {
     static childContextTypes = {
-      optgroup: PropTypes.object
+      optgroup: PropTypes.object,
     }
 
     state = { isAllSelected: false }
@@ -16,21 +16,21 @@ export default function withOptGroupProps(WrappedComponent) {
           addOption: this._addOption,
           removeOption: this._removeOption,
           // onChange: this
-        }
+        },
       }
     }
 
-    _addOption = (option) => {
+    _addOption = option => {
       this.options.push(option)
     }
 
-    _removeOption = (value) => {
+    _removeOption = value => {
       this.options = this.options.filter(option => option.value !== value)
     }
 
     _isAllSelected() {
       this.setState({
-        isAllSelected: this.options.every(option => option.getSelectedState())
+        isAllSelected: this.options.every(option => option.getSelectedState()),
       })
     }
 
@@ -49,7 +49,7 @@ export default function withOptGroupProps(WrappedComponent) {
         ...this.props,
         isAllSelected: this.state.isAllSelected,
         selectAll: this.selectAll,
-        deselectAll: this.deselectAll
+        deselectAll: this.deselectAll,
       })
     }
   }

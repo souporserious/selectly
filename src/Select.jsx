@@ -7,15 +7,13 @@ import isOptionSelected from './utils/is-option-selected'
 
 const { Manager: SelectManager } = ARIASelect
 
-const arraysEqual = (a, b) => (
-  a.sort().join(' ') === b.sort().join(' ')
-)
+const arraysEqual = (a, b) => a.sort().join(' ') === b.sort().join(' ')
 
 const noop = () => null
 
 class Select extends Component {
   static childContextTypes = {
-    selectly: PropTypes.object
+    selectly: PropTypes.object,
   }
 
   static propTypes = {
@@ -23,21 +21,21 @@ class Select extends Component {
     disabled: PropTypes.bool,
     autoWidth: PropTypes.bool,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
   }
 
   static defaultProps = {
     multiple: false,
     disabled: false,
     autoWidth: true,
-    onChange: noop
+    onChange: noop,
   }
 
   state = {
     isOpen: false,
     triggerWidth: null,
     value: this.props.value,
-    selectedOptions: []
+    selectedOptions: [],
   }
   options = []
 
@@ -53,8 +51,8 @@ class Select extends Component {
         addOption: this._addOption,
         removeOption: this._removeOption,
         onTriggerMeasure: this._handleTriggerMeasure,
-        onChange: this._handleChange
-      }
+        onChange: this._handleChange,
+      },
     }
   }
 
@@ -63,8 +61,9 @@ class Select extends Component {
     if (nextProps.value) {
       if (nextProps.value.constructor === Array) {
         if (
-          this.props.value && !arraysEqual(this.props.value, nextProps.value) ||
-          this.state.value && !arraysEqual(this.state.value, nextProps.value)
+          (this.props.value &&
+            !arraysEqual(this.props.value, nextProps.value)) ||
+          (this.state.value && !arraysEqual(this.state.value, nextProps.value))
         ) {
           this._setValue(nextProps.value)
         }
@@ -99,7 +98,7 @@ class Select extends Component {
     this.setState(state => ({ isOpen: !state.isOpen }))
   }
 
-  _addOption = (option) => {
+  _addOption = option => {
     // store option so we can update its state
     this.options.push(option)
 
@@ -109,7 +108,7 @@ class Select extends Component {
     }
   }
 
-  _removeOption = (value) => {
+  _removeOption = value => {
     this.options = this.options.filter(option => option.value !== value)
   }
 
@@ -137,7 +136,7 @@ class Select extends Component {
     return this.options.filter(option => option.getSelectedState())
   }
 
-  _handleChange = (option) => {
+  _handleChange = option => {
     const { multiple, onChange } = this.props
     const newValue = multiple
       ? getToggledValues(this.state.value, option.value)
@@ -148,7 +147,7 @@ class Select extends Component {
         value: newValue,
         option: option,
         options: this.options,
-        selectedOptions: this.state.selectedOptions
+        selectedOptions: this.state.selectedOptions,
       })
 
       if (!multiple) {

@@ -15,13 +15,7 @@ const utils = {
   getToggledValues,
   getAllValues,
   isOptionSelected,
-  withOptGroupProps
+  withOptGroupProps,
 }
 
-export {
-  Select,
-  Trigger,
-  Menu,
-  Option,
-  utils
-}
+export { Select, Trigger, Menu, Option, utils }
