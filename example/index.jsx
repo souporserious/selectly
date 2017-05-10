@@ -371,9 +371,9 @@ class MultiSelect extends Component {
                 {({ props, isHighlighted, isSelected }) => (
                   <div
                     {...props}
-                    onClick={() => {
-                      console.log('who!')
-                    }}
+                    // onClick={() => {
+                    //   console.log('who!')
+                    // }}
                     style={{ backgroundColor: isHighlighted && '#f1f1f1' }}
                   >
                     <input type="checkbox" checked={isSelected} readOnly />
@@ -389,6 +389,26 @@ class MultiSelect extends Component {
   }
 }
 
+class MenuOnly extends Component {
+  state = { currentValue: 'Select a value below' }
+  _handleChange = option => {
+    this.setState({ currentValue: option.value })
+  }
+  render() {
+    const { currentValue } = this.state
+    return (
+      <Select onChange={this._handleChange}>
+        <div>{currentValue}</div>
+        <OptionList>
+          <Option value={1}>Option 1</Option>
+          <Option value={2}>Option 2</Option>
+          <Option value={3}>Option 3</Option>
+        </OptionList>
+      </Select>
+    )
+  }
+}
+
 class App extends Component {
   render() {
     return (
@@ -399,7 +419,10 @@ class App extends Component {
         <div style={{ margin: '0 0 24px' }}>
           <Demo2 />
         </div>
-        <MultiSelect />
+        <div style={{ margin: '0 0 24px' }}>
+          <MultiSelect />
+        </div>
+        <MenuOnly />
       </div>
     )
   }

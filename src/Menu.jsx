@@ -1,21 +1,20 @@
 import React, { PropTypes } from 'react'
 import Portal from 'react-travel'
 import { Popper } from 'react-popper'
-import { Select as ARIASelect } from 'react-aria'
+import { Select } from 'react-aria'
 
-const Menu = (
-  {
+const Menu = (props, context) => {
+  const {
     component,
-    renderTo = document.body,
+    renderTo,
     placement,
     style,
     children,
     ...restProps
-  },
-  { selectly }
-) => {
+  } = props
+  const { selectly } = context
   const optionList = (
-    <ARIASelect.OptionList
+    <Select.OptionList
       component={false}
       closeOnOutsideClick={true}
       onOptionSelection={selectly.onChange}
@@ -32,7 +31,7 @@ const Menu = (
           {children}
         </Popper>
       )}
-    </ARIASelect.OptionList>
+    </Select.OptionList>
   )
   const componentToRender = renderTo
     ? <Portal renderTo={renderTo} children={optionList} />
@@ -52,6 +51,7 @@ Menu.propTypes = {
 
 Menu.defaultProps = {
   placement: 'bottom-start',
+  renderTo: document.body,
 }
 
 export default Menu

@@ -2,6 +2,7 @@ import Select from './Select'
 import Trigger from './Trigger'
 import Menu from './Menu'
 import Option from './Option'
+import OptionList from './OptionList'
 import buildOptionsLookup from './utils/build-options-lookup'
 import getCurrentOptions from './utils/get-current-options'
 import getToggledValues from './utils/get-toggled-values'
@@ -18,4 +19,4 @@ const utils = {
   withOptGroupProps,
 }
 
-export { Select, Trigger, Menu, Option, utils }
+export { Select, Trigger, Menu, OptionList, Option, utils }
