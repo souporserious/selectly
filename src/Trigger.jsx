@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import ReactDOM from 'react-dom'
 import { Target } from 'react-popper'
 import { Trigger as ARIATrigger } from 'react-aria'
 import Measure from 'react-measure'
@@ -33,19 +34,21 @@ const Trigger = (
   }
 
   const component = (
-    <Target component={false}>
-      <ARIATrigger
-        isOpen={isOpen}
-        keybindings={[' ']}
-        onTrigger={toggle}
-        children={childrenToRender}
-        {...restProps}
-      />
+    <Target>
+      {({ targetProps }) =>
+        <ARIATrigger
+          ref={c => {
+            targetProps.ref(ReactDOM.findDOMNode(c))
+          }}
+          isOpen={isOpen}
+          keybindings={[' ']}
+          onTrigger={toggle}
+          children={childrenToRender}
+          {...restProps}
+        />}
     </Target>
   )
-  return autoWidth
-    ? <Measure onMeasure={onTriggerMeasure} children={component} />
-    : component
+  return component
 }
 
 Trigger.contextTypes = {

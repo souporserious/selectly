@@ -29,14 +29,13 @@ const {
 // http://www.w3.org/TR/WCAG10-HTML-TECHS/#forms
 
 const OptGroup = withOptGroupProps(
-  ({ title, children, isAllSelected, selectAll, deselectAll }) => (
+  ({ title, children, isAllSelected, selectAll, deselectAll }) =>
     <div>
       <header onClick={isAllSelected ? deselectAll : selectAll}>
         {title}
       </header>
       {children}
     </div>
-  )
 )
 
 class CustomTrigger extends Component {
@@ -61,9 +60,9 @@ class CustomTrigger extends Component {
       <Trigger
         className={
           'react-select-trigger' +
-            (isMultiple ? ' react-select-trigger--multiple' : '') +
-            (isActive ? ' react-select-trigger--active' : '') +
-            (isDisabled ? ' react-select-trigger--disabled' : '')
+          (isMultiple ? ' react-select-trigger--multiple' : '') +
+          (isActive ? ' react-select-trigger--active' : '') +
+          (isDisabled ? ' react-select-trigger--disabled' : '')
         }
         {...restProps}
       >
@@ -107,13 +106,13 @@ class MySelect extends Component {
     const isSelected = isOptionSelected(this.props.value, value)
     return (
       <Option key={label} value={value}>
-        {({ props, isHighlighted }) => (
+        {({ props, isHighlighted }) =>
           <div
             {...props}
             className={
               'react-select-option' +
-                (hasCheckbox ? ' has-checkbox' : '') +
-                (isSelected ? ' is-selected' : '')
+              (hasCheckbox ? ' has-checkbox' : '') +
+              (isSelected ? ' is-selected' : '')
             }
             style={{
               background: isHighlighted ? 'orange' : '',
@@ -127,8 +126,7 @@ class MySelect extends Component {
                 readOnly
               />}
             {label}
-          </div>
-        )}
+          </div>}
       </Option>
     )
   }
@@ -337,20 +335,19 @@ class MultiSelect extends Component {
         onChange={this._handleChange}
       >
         <Trigger>
-          {(props, { selectedOptions }) => (
+          {(props, { selectedOptions }) =>
             <button {...props} style={{ display: 'flex' }}>
               {selectedOptions.length > 0
-                ? selectedOptions.map(({ label }) => (
+                ? selectedOptions.map(({ label }) =>
                     <div
                       key={label}
                       style={{ padding: 2, margin: 2, backgroundColor: '#ccc' }}
                     >
                       {label}
                     </div>
-                  ))
+                  )
                 : 'Select a value'}
-            </button>
-          )}
+            </button>}
         </Trigger>
         <Menu
           className="react-select-menu"
@@ -366,9 +363,9 @@ class MultiSelect extends Component {
             Red & Blue
           </button>
           <OptGroup title="Colors">
-            {options.map(value => (
+            {options.map(value =>
               <Option key={value} value={value} label={value.toUpperCase()}>
-                {({ props, isHighlighted, isSelected }) => (
+                {({ props, isHighlighted, isSelected }) =>
                   <div
                     {...props}
                     // onClick={() => {
@@ -378,10 +375,9 @@ class MultiSelect extends Component {
                   >
                     <input type="checkbox" checked={isSelected} readOnly />
                     {value}
-                  </div>
-                )}
+                  </div>}
               </Option>
-            ))}
+            )}
           </OptGroup>
         </Menu>
       </Select>

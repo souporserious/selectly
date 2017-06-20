@@ -1,5 +1,7 @@
 ## CHANGELOG
 ### 0.7.0
+Upgrade to latest `react-popper` and `react-travel`
+
 `onChange` now returns an object with `value`, `option`, `options`, and `selectedOptions`
 
 `Select` holds an internal state of options now
