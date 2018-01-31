@@ -1,6 +1,6 @@
 {
   "name": "selectly",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Build custom, accessible, select menus for React.",
   "main": "lib/selectly.js",
   "files": [
