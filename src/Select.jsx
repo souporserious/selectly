@@ -1,4 +1,5 @@
-import React, { Component, PropTypes, Children, cloneElement } from 'react'
+import React, { Component, Children, cloneElement } from 'react'
+import PropTypes from 'prop-types'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import { Select as ARIASelect } from 'react-aria'
 import { Manager as PopperManager } from 'react-popper'
